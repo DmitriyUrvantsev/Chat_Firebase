@@ -9,18 +9,19 @@ import 'package:chat_firebase/widgets/app_bar/custom_app_bar.dart';
 
 import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_field.dart';
+import 'provider/chat_provider.dart';
 
 // ignore: must_be_immutable
-class K3AccounrScreenWidget extends StatelessWidget {
-  const K3AccounrScreenWidget({
+class ChatScreenWidget extends StatelessWidget {
+  const ChatScreenWidget({
     super.key,
   });
 
   @override
   @override
   Widget build(BuildContext context) {
-    final read = context.read<MainScreenProvider>();
-    final watch = context.watch<MainScreenProvider>();
+    final read = context.read<ChatScreenProvider>();
+    final watch = context.watch<ChatScreenProvider>();
     return PopScope(
       canPop: true,
       child: Scaffold(
@@ -29,54 +30,27 @@ class K3AccounrScreenWidget extends StatelessWidget {
         body: Container(
             width: double.maxFinite,
             padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 24.v),
-            child: Form(
-              key: read.formKey,
-              onChanged: () {
-                read.validateForm();
-              },
-              child: Column(children: [
-                //----------------------------------------
-                const SelectAvatarWidget(),
-
-                SizedBox(height: 17.v),
-
-                SizedBox(height: 17.v),
-                CustomFloatingTextField(
-                    controller: read.yourNameController,
-                    labelText: "Имя",
-                    validator: (val) =>
-                        val?.isEmpty ?? false ? 'Введите имя' : null,
-                    labelStyle: CustomTextStyles.bodyLargeGray600,
-                    hintText: "Иван"),
-                SizedBox(height: 17.v),
-                CustomFloatingTextField(
-                    controller: read.yourSurNameController,
-                    labelText: "Фамилия",
-                    validator: (val) =>
-                        val?.isEmpty ?? false ? 'Введите фамилию' : null,
-                    labelStyle: CustomTextStyles.bodyLargeGray600,
-                    hintText: "Иванов"),
-
-                SizedBox(height: 40.v),
-                CustomElevatedButton(
-                  //isDisabled: false,
-                  // decoration: BoxDecoration(color: Colors.amber),
-                  onPressed: () {
-                    read.saveAccuontData();
-                  },
-                  text: 'Сохранить и войти',
-                  buttonStyle:
-                      watch.isFormValid ? CustomButtonStyles.fillAmber : null,
-                )
-              ]),
-            )),
+            child: Column(children: [
+              //----------------------------------------
+              const Spacer(),
+              CustomElevatedButton(
+                //isDisabled: false,
+                // decoration: BoxDecoration(color: Colors.amber),
+                onPressed: () {
+                  read.singIn();
+                },
+                text: 'Выйти',
+                // buttonStyle:
+                //     watch.isFormValid ? CustomButtonStyles.fillAmber : null,
+              )
+            ])),
       ),
     );
   }
 
   /// ======================AppBar==============================================
   PreferredSizeWidget _sectionAppBar(BuildContext context) {
-    final read = context.read<MainScreenProvider>();
+    final read = context.read<ChatScreenProvider>();
     return CustomAppBar(
       backgroundColor: PrimaryColors().white, //!=================
       //height: 43.v,
@@ -95,7 +69,7 @@ class K3AccounrScreenWidget extends StatelessWidget {
             //     margin: EdgeInsets.only(bottom: 1.v)),
             AppbarTitle(
                 onTap: () => (),
-                text: 'Аккаунт',
+                text: 'Чат',
                 margin: EdgeInsets.only(left: 26.h))
           ])),
       // styleType: Style.bgShadow,

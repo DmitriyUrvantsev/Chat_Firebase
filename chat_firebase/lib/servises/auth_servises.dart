@@ -11,16 +11,21 @@ class AuthService {
   //static String verifyId = ""; //!===============
 
   UserApp? _userFromFirebaseUser(User? user) {
-    //Future<UserApp?> _userFromFirebaseUser(User? user) async {
-    _sessionDataProvider.setAccountId(user?.uid.toString());
-    return user != null ? UserApp(uid: user.uid) : null;
+    if (user != null) {
+      _sessionDataProvider.setAccountId(user.uid.toString());
+      return UserApp(uid: user.uid);
+    } else {
+      _sessionDataProvider.setAccountId(null); // Clear accountId
+      return null;
+    }
   }
 
   // аутентификация, изменение пользовательского потока(залогинился или нет (user!=null))
   Stream<UserApp?>? get user {
     return _auth.authStateChanges().map(_userFromFirebaseUser);
   }
-///---------------------войти----------------------------------------
+
+  ///---------------------войти----------------------------------------
 
   // ---------войти анонимно------------
   Future signInAnon() async {
@@ -28,21 +33,22 @@ class AuthService {
       UserCredential result = await _auth.signInAnonymously();
       User? user = result.user;
 
-      return _userFromFirebaseUser(user);
+      //return _userFromFirebaseUser(user);
+      return user;// Возвращаем User после успешного входа
     } catch (e) {
       print('ошибка при анонимном входе - ${e.toString()}');
       return null;
     }
   }
 
-  
   ///---------------------выйти----------------------------------------
-  Future signOut() async {
+ Future signOut() async {
     try {
-      return await _auth.signOut();
+      await _auth.signOut();
+      _sessionDataProvider.setAccountId(null); // Clear accountId on sign out
     } catch (error) {
-      print('error.toString() ${error.toString()}');
-      return null;
+      print('error.toString()!!!!!!!!!!!!!!!!!!! ${error.toString()}');
+      throw error; // Rethrow the error for handling in UI if necessary
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:chat_firebase/presentation/auth_screen/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'presentation/auth_screen/account_screens/account_screen.dart';
 import 'presentation/auth_screen/provider/maim_screen_provider.dart';
+import 'presentation/chat_screen/chat_screen.dart';
 
 class SelectorLoading extends StatefulWidget {
   const SelectorLoading({super.key});
@@ -34,7 +35,7 @@ class _SelectorLoadingState extends State<SelectorLoading> {
     if (user?.uid == null) {
       return const K3AccounrScreenWidget();//uid: user?.uid??'');
     } else {
-      return CircularProgressIndicator();
+      return const ChatScreenWidget();
       //K2MainScreenWidget(); //uid: user!.uid);
     }
   }

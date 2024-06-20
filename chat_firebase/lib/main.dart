@@ -6,6 +6,7 @@ import 'package:chat_firebase/firebase_options.dart';
 import 'package:chat_firebase/presentation/auth_screen/provider/maim_screen_provider.dart';
 import 'package:chat_firebase/servises/auth_servises.dart';
 import 'core/app_export.dart';
+import 'presentation/chat_screen/provider/chat_provider.dart';
 
 ///
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(create: (context) => ThemeProvider()),
             ChangeNotifierProvider(create: (context) => MainScreenProvider()),
+            ChangeNotifierProvider(create: (context) => ChatScreenProvider()),
             StreamProvider<UserApp?>.value(
               value: AuthService().user,
               initialData: null,

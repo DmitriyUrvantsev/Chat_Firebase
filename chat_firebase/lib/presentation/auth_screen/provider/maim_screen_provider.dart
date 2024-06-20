@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,29 +14,20 @@ import 'package:chat_firebase/widgets/custom_bottom_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MainScreenProvider extends ChangeNotifier {
+
   final formKey = GlobalKey<FormState>();
   TextEditingController yourNameController = TextEditingController();
   TextEditingController yourSurNameController = TextEditingController();
   String? uid;
 
-  //---------------------------------------------------------------------------
-  // int _currentMainScreenIndex = 0;
-  // int get currentMainScreenIndex => _currentMainScreenIndex;
+//---------------------------------------------------------------------------
+   final AuthService _authService = AuthService();
+  final DatabaseService _databaseService; // Поле для хранения DatabaseService
+  UserApp? _userData;
+  UserApp? get userData => _userData;
 
-  // List<BottomMenuModel> bottomMenuList = [
-  //   BottomMenuModel(
-  //     icon: ImageConstant.imgNav,
-  //     activeIcon: ImageConstant.imgNav,
-  //     title: 'Мои проекты',
-  //     type: BottomBarEnum.tf,
-  //   ),
-  //   BottomMenuModel(
-  //     icon: ImageConstant.imgNavLightBlueA700,
-  //     activeIcon: ImageConstant.imgNavLightBlueA700,
-  //     title: 'Мой аккаунт',
-  //     type: BottomBarEnum.tf,
-  //   )
-  // ];
+  MainScreenProvider({required DatabaseService databaseService})
+      : _databaseService = databaseService;
 
 //!=======AUTH============================================================
 
@@ -49,18 +41,8 @@ class MainScreenProvider extends ChangeNotifier {
     print('_isAuth - $_isAuth');
   }
 
-//!=======MainScreenModel==================================================
-  // void toglleIndex(int index) {
-  //   _currentMainScreenIndex = index;
-  //   notifyListeners();
-  // }
-
-  // void backProjectScreen() {
-  //   _currentMainScreenIndex = 0;
-  //   notifyListeners();
-  // }
   ///============== проверка заполнености текстФилдов ============================
- bool _isFormValid = false;
+  bool _isFormValid = false;
 
   bool get isFormValid => _isFormValid;
 
@@ -75,59 +57,49 @@ class MainScreenProvider extends ChangeNotifier {
   String? currentSurName;
   String? currentAvatar;
 
-  UserAppData? userData;
+  UserAppData? userAppData;
   AsyncSnapshot<UserAppData>? snapShot;
 
   void saveAccuontData() {
     if (formKey.currentState?.validate() ?? false) {
-      currentName = yourNameController.text;
-      currentSurName = yourSurNameController.text;
+      currentName = yourNameController.text.substring(0, 1).toUpperCase() +
+          yourNameController.text.substring(1).toLowerCase();
+
+      currentSurName =
+          yourSurNameController.text.substring(0, 1).toUpperCase() +
+              yourSurNameController.text.substring(1).toLowerCase();
       print(yourNameController.text);
       print(yourSurNameController.text);
-      //saveChangesData();
+      saveChangesData();
     }
   }
 
 //-------------Сохраненеи имени фамилии на сервере---------------------------------
-  Future saveChangesData() async {
-    await DatabaseService(uid: userData?.uid ?? uid ?? '').updateUserData(
-      //! разберись с id
-      currentName ?? snapShot?.data?.name,
-      currentSurName ?? snapShot?.data?.surName,
-      // currentAvatar ?? snapShot?.data?.avatar,
-    );
-    notifyListeners();
-  }
-
-//!=======Form Name Model==================================================
-  void inputName(context) async {
-    if (formKey.currentState?.validate() ?? false) {
-      currentName = yourNameController.text.substring(0, 1).toUpperCase() +
-          yourNameController.text.substring(1).toLowerCase();
-      saveChangesData();
-      yourNameController.text = '';
-      notifyListeners();
-      Navigator.pop(context);
+    Future<void> saveChangesData() async {
+    try {
+      User? user = await _authService.signInAnon();
+      if (user != null) {
+        _userData = UserApp(uid: user.uid);
+        await _databaseService.updateUserData(
+          currentName,
+          currentSurName,
+        );
+        print('Данные успешно обновлены для пользователя с uid: ${user.uid}');
+        notifyListeners();
+      } else {
+        print('Ошибка: пользователь не зарегистрирован');
+      }
+    } catch (e) {
+      print('Ошибка при сохранении данных: $e');
     }
   }
+
+//---------------- Авторизация на сервере ------------------------------------
+  Future singIn() async {
+    AuthService().signInAnon();
+  }
+
 //==============================================================================
-
-//!=======Form SurName Model==================================================
-  Future inputSurName(context) async {
-    if (formKey.currentState?.validate() ?? false) {
-      currentSurName =
-          yourSurNameController.text.substring(0, 1).toUpperCase() +
-              yourSurNameController.text
-                  .substring(
-                    1,
-                  )
-                  .toLowerCase();
-      saveChangesData();
-      yourSurNameController.text = '';
-      notifyListeners();
-      Navigator.pop(context);
-    }
-  }
 
 //!=========Avatar Model========================================================
 //!=========Avatar Model========================================================

@@ -13,16 +13,18 @@ import 'package:chat_firebase/servises/data_base.dart';
 import 'package:chat_firebase/widgets/custom_bottom_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MainScreenProvider extends ChangeNotifier {
+import '../../../core/app_export.dart';
 
+class MainScreenProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   TextEditingController yourNameController = TextEditingController();
   TextEditingController yourSurNameController = TextEditingController();
   String? uid;
 
 //---------------------------------------------------------------------------
-   final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
   final DatabaseService _databaseService; // Поле для хранения DatabaseService
+  final FirebaseApi _firebaseApi = FirebaseApi();
   UserApp? _userData;
   UserApp? get userData => _userData;
 
@@ -75,15 +77,25 @@ class MainScreenProvider extends ChangeNotifier {
   }
 
 //-------------Сохраненеи имени фамилии на сервере---------------------------------
-    Future<void> saveChangesData() async {
+  Future<void> saveChangesData() async {
     try {
       User? user = await _authService.signInAnon();
       if (user != null) {
         _userData = UserApp(uid: user.uid);
+        uid = user.uid;
+
+
+// Загрузка изображения и получение URL
+        if (photo != null) {
+          
+          final avatarUrl = await _firebaseApi.uploadAvatar(uid!, photo!);
+          currentAvatar = avatarUrl; // Сохраняем ссылку на аватар
+        }
+//-----------------------
+
+
         await _databaseService.updateUserData(
-          currentName,
-          currentSurName,
-        );
+            currentName, currentSurName, currentAvatar, uid);
         print('Данные успешно обновлены для пользователя с uid: ${user.uid}');
         notifyListeners();
       } else {

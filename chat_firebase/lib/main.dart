@@ -7,6 +7,7 @@ import 'package:chat_firebase/presentation/auth_screen/provider/maim_screen_prov
 import 'package:chat_firebase/servises/auth_servises.dart';
 import 'core/app_export.dart';
 import 'presentation/chat_screen/provider/chat_provider.dart';
+import 'servises/data_base.dart';
 
 ///
 
@@ -31,12 +32,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DatabaseService databaseService = DatabaseService(uid: '');
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => ThemeProvider()),
-            ChangeNotifierProvider(create: (context) => MainScreenProvider()),
+            ChangeNotifierProvider(
+                create: (context) =>
+                    MainScreenProvider(databaseService: databaseService)),
             ChangeNotifierProvider(create: (context) => ChatScreenProvider()),
             StreamProvider<UserApp?>.value(
               value: AuthService().user,

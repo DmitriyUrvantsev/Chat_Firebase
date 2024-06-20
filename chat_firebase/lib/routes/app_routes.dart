@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:chat_firebase/presentation/auth_screen/account_screens/account_form_field/k7_account_form_name.dart';
-import 'package:chat_firebase/presentation/auth_screen/account_screens/account_form_field/k7_account_form_surname.dart';
 import 'package:chat_firebase/selector_loading.dart';
 
 abstract class AppNavigationRoutes {

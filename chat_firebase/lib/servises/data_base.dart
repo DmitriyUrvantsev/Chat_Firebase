@@ -10,10 +10,11 @@ class DatabaseService extends ChangeNotifier {
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('chat_firebase');
 
-  Future<void> updateUserData([String? name, String? surName]) async {
+  Future<void> updateUserData( String? name, String? surName, String? currentAvatar, String? uid) async {
     Map<String, dynamic> data = {
       'name': name,
       'surName': surName,
+      'currentAvatar': currentAvatar,
     };
     return await taskCollection.doc(uid).set(data);
   }

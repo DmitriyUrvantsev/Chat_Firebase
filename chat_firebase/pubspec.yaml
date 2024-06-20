@@ -1,0 +1,62 @@
+name: chat_firebase
+description: Task registration SMS.
+version: 1.0.0+1
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+dependencies:
+  another_stepper: ^1.2.2
+  cached_network_image: ^3.3.1
+  cloud_firestore: ^5.0.1
+  complete_timer: ^1.0.0
+  connectivity_plus: ^6.0.3
+  dialogx: ^1.0.0
+  dio: ^5.4.0
+  file_picker: ^8.0.5
+  firebase_auth: ^5.1.0
+  firebase_core: ^3.1.0
+  firebase_storage: ^12.0.1
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_secure_storage: ^9.0.0
+  flutter_svg: ^2.0.9
+  image_picker: ^1.0.7
+  image_picker_ios: ^0.8.9+1
+  intl: any
+  mask_text_input_formatter: ^2.8.0
+  path: ^1.9.0
+  path_provider: ^2.1.2
+  provider: ^6.1.1
+  rounded_loading_button: ^2.1.0
+  
+  shared_preferences: ^2.2.2
+  streamed_controller: ^1.2.0
+  video_player: ^2.8.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  pedantic_mono: ^1.25.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/images/
+
+  fonts:
+    - family: SF Pro Text
+      fonts:
+        - asset: assets/fonts/SFProTextRegular.ttf
+          weight: 400
+        - asset: assets/fonts/SFProTextSemibold.ttf
+          weight: 600
+        - asset: assets/fonts/SFProTextMedium.ttf
+          weight: 500
+    - family: SF Pro Display
+      fonts:
+        - asset: assets/fonts/SFProDisplayBold.ttf
+          weight: 700
+        - asset: assets/fonts/SFProDisplayMedium.ttf
+          weight: 500
+        - asset: assets/fonts/SFProDisplayRegular.ttf
+          weight: 400

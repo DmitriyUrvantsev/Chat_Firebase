@@ -10,6 +10,10 @@ class AuthService {
   //String? pinCode; //!======
   //static String verifyId = ""; //!===============
 
+    User? get currentUser {
+    return _auth.currentUser;
+  }
+
   UserApp? _userFromFirebaseUser(User? user) {
     if (user != null) {
       _sessionDataProvider.setAccountId(user.uid.toString());

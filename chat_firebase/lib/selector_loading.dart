@@ -4,7 +4,7 @@ import 'package:chat_firebase/presentation/auth_screen/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'presentation/auth_screen/account_screens/account_screen.dart';
 import 'presentation/auth_screen/provider/maim_screen_provider.dart';
-import 'presentation/chat_screen/screens/chat_screen.dart';
+import 'presentation/chat_list/screens/chat_list_screen.dart';
 
 
 class SelectorLoading extends StatefulWidget {

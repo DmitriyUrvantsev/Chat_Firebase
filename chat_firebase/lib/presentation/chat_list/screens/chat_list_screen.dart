@@ -4,7 +4,6 @@ import '../../../data/models/user/user_app.dart';
 import '../../../servises/auth_servises.dart';
 import '../../../servises/data_base.dart';
 import '../../auth_screen/provider/maim_screen_provider.dart';
-import '../provider/chat_provider.dart';
 import 'user_item.dart';
 
 class ChatScreenWidget extends StatelessWidget {

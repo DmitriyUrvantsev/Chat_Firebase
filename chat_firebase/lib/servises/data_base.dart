@@ -54,9 +54,20 @@ class DatabaseService extends ChangeNotifier {
 
   // ---------получение всех пользователей stream ---------
   Stream<List<UserAppData>> get allUsers {
-    return userCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => _userDataFromSnapshot(doc)).toList();
-    });
+    return userCollection.snapshots().map((snapshot) => _userListFromSnapshot(snapshot));
   }
+
+  List<UserAppData> _userListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((doc) => UserAppData(
+              uid: doc.id,
+              name: doc['name'] ?? '',
+              surName: doc['surName'] ?? '',
+              currentAvatar: doc['currentAvatar'],
+            ))
+        .where((user) => user.uid != uid) // Фильтрация текущего пользователя
+        .toList();
+  }
+
 
 }

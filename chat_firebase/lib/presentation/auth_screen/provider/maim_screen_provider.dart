@@ -28,8 +28,8 @@ class MainScreenProvider extends ChangeNotifier {
   UserApp? _userData;
   UserApp? get userData => _userData;
 
-  MainScreenProvider({required DatabaseService databaseService})
-      : _databaseService = databaseService;
+  MainScreenProvider({required DatabaseService dbService})
+      : _databaseService = dbService;
 
 //!=======AUTH============================================================
 
@@ -84,15 +84,12 @@ class MainScreenProvider extends ChangeNotifier {
         _userData = UserApp(uid: user.uid);
         uid = user.uid;
 
-
 // Загрузка изображения и получение URL
         if (photo != null) {
-          
           final avatarUrl = await _firebaseApi.uploadAvatar(uid!, photo!);
           currentAvatar = avatarUrl; // Сохраняем ссылку на аватар
         }
 //-----------------------
-
 
         await _databaseService.updateUserData(
             currentName, currentSurName, currentAvatar, uid);
@@ -110,10 +107,10 @@ class MainScreenProvider extends ChangeNotifier {
   Future singIn() async {
     AuthService().signInAnon();
   }
+
 //
- Future singOut() async {
+  Future singOut() async {
     AuthService().signOut();
-    
   }
 
 //==============================================================================

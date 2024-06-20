@@ -37,19 +37,29 @@ class FirebaseApi {
 
  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Future<String> uploadAvatar(String uid, File photo) async {
-    try {
-      //final ref = _storage.ref().child('avatars/$uid.jpg');
-      final ref = _storage.ref().child('users/$uid/avatar.jpg');
 
+
+  Future<String> uploadAvatar(String uid, File? photo) async {
+    if (photo == null) {
+      print('Не выбрано изображение');
+      return '';
+    }
+
+    try {
+      final ref = _storage.ref().child('users/$uid/avatar.jpg');
       await ref.putFile(photo);
 
       final url = await ref.getDownloadURL();
       print('Ссылка на загруженное изображение: $url');
-      return url; // Возвращаем URL загруженного изображения
+      print('Изображение успешно загружено и ссылка сохранена в Firestore');
+
+      return url;
     } catch (e) {
       print('Ошибка при загрузке изображения: $e');
-      rethrow; // Перебрасываем ошибку для обработки в вызывающем коде
+      return '';
     }
   }
+
+
+
 }

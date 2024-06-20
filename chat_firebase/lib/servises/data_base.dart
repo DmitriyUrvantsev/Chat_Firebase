@@ -7,7 +7,7 @@ class DatabaseService extends ChangeNotifier {
   DatabaseService({required this.uid});
 
   // ---------ссылка на коллекцию ---------
-  final CollectionReference taskCollection =
+  final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('chat_firebase');
 
   Future<void> updateUserData( String? name, String? surName, String? currentAvatar, String? uid) async {
@@ -16,7 +16,7 @@ class DatabaseService extends ChangeNotifier {
       'surName': surName,
       'currentAvatar': currentAvatar,
     };
-    return await taskCollection.doc(uid).set(data);
+    return await userCollection.doc(uid).set(data);
   }
 
   //! ---------userFromFireBase list from snapshot ---------
@@ -35,6 +35,7 @@ class DatabaseService extends ChangeNotifier {
       uid: uid,
       name: snapshot.get('name'),
       surName: snapshot.get('surName'),
+     currentAvatar: snapshot.get('currentAvatar'),
     );
   }
 
@@ -45,9 +46,17 @@ class DatabaseService extends ChangeNotifier {
 
   // --------- получение user doc stream ---------//!============
   Stream<UserAppData> get userData {
-    return taskCollection
+    return userCollection
         .doc(uid)
         .snapshots()
         .map((e) => _userDataFromSnapshot(e));
   }
+
+  // ---------получение всех пользователей stream ---------
+  Stream<List<UserAppData>> get allUsers {
+    return userCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => _userDataFromSnapshot(doc)).toList();
+    });
+  }
+
 }

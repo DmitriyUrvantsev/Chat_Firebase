@@ -14,12 +14,12 @@ class UserAppData {
   final String uid;
   final String? name;
   final String? surName;
-  final String? avatar;
+  final String? currentAvatar;
 
   UserAppData({
     required this.uid,
     required this.name,
     this.surName,
-     this.avatar,
+     this.currentAvatar,
   });
 }

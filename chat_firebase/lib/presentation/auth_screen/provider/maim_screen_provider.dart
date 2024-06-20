@@ -110,6 +110,11 @@ class MainScreenProvider extends ChangeNotifier {
   Future singIn() async {
     AuthService().signInAnon();
   }
+//
+ Future singOut() async {
+    AuthService().signOut();
+    
+  }
 
 //==============================================================================
 

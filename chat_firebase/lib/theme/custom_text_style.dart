@@ -6,7 +6,6 @@ import '../core/app_export.dart';
 /// Additionally, this class includes extensions on [TextStyle] to easily apply specific font families to text.
 
 class CustomTextStyles {
-  
   //===========================================================================
   // Body text style
   static get bodyLargeGray600 => theme.textTheme.bodyLarge!.copyWith(
@@ -19,14 +18,21 @@ class CustomTextStyles {
         color: appTheme.gray800,
         fontSize: 17.fSize,
       );
+  static get bodyLargeGray80020 => theme.textTheme.bodyLarge!.copyWith(
+        color: appTheme.gray600,
+        fontSize: 20.fSize,
+      );
   static get bodyLargeLightblueA700 => theme.textTheme.bodyLarge!.copyWith(
         color: appTheme.lightBlueA700,
       );
   static get bodyLargeLightblueA700PopUp => theme.textTheme.bodyLarge!
       .copyWith(color: appTheme.lightBlueA700, fontSize: 20);
 
-      static get bodyLargeLightblueA700PopUpBold => theme.textTheme.bodyLarge!
-      .copyWith(color: appTheme.lightBlueA700, fontSize: 20, fontWeight: FontWeight.bold);
+  static get bodyLargeLightblueA700PopUpBold =>
+      theme.textTheme.bodyLarge!.copyWith(
+          color: appTheme.lightBlueA700,
+          fontSize: 20,
+          fontWeight: FontWeight.bold);
 
   static get bodyLargeOnPrimary => theme.textTheme.bodyLarge!.copyWith(
         color: theme.colorScheme.onPrimary,

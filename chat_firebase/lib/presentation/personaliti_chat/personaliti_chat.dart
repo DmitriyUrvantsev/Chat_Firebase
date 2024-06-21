@@ -15,15 +15,14 @@ import 'provider/chat_provider.dart';
 import '../../../servises/auth_servises.dart';
 
 class ChatScreen extends StatefulWidget {
-  // final String receiverId;
-  // final String receiverName;
   final UserAppData user;
 
-  const ChatScreen({required this.user, super.key});
+  const ChatScreen({required this.user, Key? key}) : super(key: key);
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
+
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -32,9 +31,12 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId =
-        AuthService().currentUser!.uid; // Использование реального user ID
+    final currentUserId = AuthService().currentUser?.uid ??
+        'нулл'; // Использование реального user ID
     chatProvider.createChat(currentUserId, widget.user.uid);
+
+    print(currentUserId);
+    print(widget.user.uid);
   }
 
   @override
@@ -49,8 +51,8 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId =
-        AuthService().currentUser!.uid; // Использование реального user ID
+    final currentUserId = AuthService().currentUser?.uid ??
+        'нулл'; // Использование реального user ID
 
     ChatMessage message = ChatMessage(
       senderId: currentUserId,
@@ -66,11 +68,13 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
@@ -78,107 +82,112 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatProvider = Provider.of<ChatProvider>(context);
 
     return Scaffold(
-      appBar: _sectionCastomAppBar(context),
+      appBar: _sectionCustomAppBar(context),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.h),
+        padding: EdgeInsets.symmetric(horizontal: 15.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Expanded(
               child: StreamBuilder<List<ChatMessage>>(
                 stream: chatProvider.getMessages(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
 
-                  var messages = snapshot.data ?? [];
+                  var messagesOrign = snapshot.data ?? [];
+
+                  var messages = messagesOrign.reversed.toList();
 
                   // Прокрутка к последнему добавленному сообщению при первой загрузке
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _scrollToBottom();
                   });
 
-                  return Column(
-                    children: [
-                      
-                      ListView.builder(
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) {
-                          var message = messages[index];
-                          bool isMe = message.senderId ==
-                              AuthService().currentUser!.uid; // Использование реального user ID
-                      
-                          return ItemChatWidget(isMe: isMe, message: message);
-                        },
-                      ),
-                    ],
+                  return ListView.builder(
+                    reverse: true,
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      var message = messages[index];
+                      bool isMe = message.senderId ==
+                          AuthService()
+                              .currentUser
+                              ?.uid; // Использование реального user ID
+
+                      return ItemChatWidget(isMe: isMe, message: message);
+                    },
                   );
                 },
               ),
             ),
-            _buildSectonTextField(),
+            _buildSectionTextField(),
           ],
         ),
       ),
     );
   }
 
-//   CustomAppBar _buildCustomAppBar(BuildContext context) {
-//     final read = context.read<ChatProvider>();
-//     return CustomAppBar(
-//       // ваш код для AppBar
-//     );
-//   }
-
-//   Padding _buildSectionTextField() {
-//     return Padding(
-//       // ваш код для TextField
-//     );
-//   }
-// }
-//
-//
-  ///------------------- AppBar ---------------------------------------
-  CustomAppBar _sectionCastomAppBar(BuildContext context) {
+  CustomAppBar _sectionCustomAppBar(BuildContext context) {
+    final nik = '${widget.user.name?[0]}${widget.user.surName?[0]}';
     final read = context.read<ChatProvider>();
     return CustomAppBar(
       height: 60,
-      leadingWidth: 50.h,
+      leadingWidth: 50.0,
       leading: AppbarLeadingImage(
-          onTap: () => read.back(),
-          color: PrimaryColors().gray600,
-          imagePath: ImageConstant.imgArrowRight,
-          margin:
-              EdgeInsets.only(left: 8.h, top: 19.v, bottom: 20.v, right: 10.h)),
+        onTap: () => read.back(),
+        color: PrimaryColors().gray600,
+        imagePath: ImageConstant.imgArrowRight,
+        margin:
+            EdgeInsets.only(left: 8.0, top: 19.0, bottom: 20.0, right: 10.0),
+      ),
       title: Row(
         children: [
-          Container(
-            height: 50,
-            width: 50,
-            clipBehavior: Clip.hardEdge,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: Image.network(
-              widget.user.currentAvatar!,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(width: 12.h),
+          widget.user.currentAvatar != null
+              ? Container(
+                  height: 50,
+                  width: 50,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.network(
+                    widget.user.currentAvatar ?? 'нулл',
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : Container(
+                  height: 50,
+                  width: 50,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      nik,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+          SizedBox(width: 12.0),
           Padding(
-            padding: EdgeInsets.only(top: 2.v, bottom: 9.v),
+            padding: EdgeInsets.only(top: 2.0, bottom: 9.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppbarTitle(
-                    text:
-                        '${widget.user.name ?? 'нулл'} ${widget.user.surName ?? 'нулл'}'),
+                  text:
+                      '${widget.user.name ?? 'нулл'} ${widget.user.surName ?? 'нулл'}',
+                ),
                 AppbarSubtitle(text: 'В сети'),
               ],
             ),
@@ -197,10 +206,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-//
-//
-  ///------------------- AppBar ---------------------------------------
-  Padding _buildSectonTextField() {
+  Padding _buildSectionTextField() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: CustomFloatingTextField(
@@ -216,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
           borderSide: BorderSide.none,
         ),
         fillColor: Colors.grey[200],
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       ),
     );
   }

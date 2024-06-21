@@ -108,10 +108,10 @@ class UserItem extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatScreen(
-                        receiverId: user.uid,
-                        receiverName: '${user.name} ${user.surName}',
-                      ),
+                      builder: (context) => ChatScreen(user: user
+                          // receiverId: user.uid,
+                          // receiverName: '${user.name} ${user.surName}',
+                          ),
                     ),
                   );
                 },

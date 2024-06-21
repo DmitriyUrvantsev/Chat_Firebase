@@ -27,7 +27,7 @@ class AppbarSubtitle extends StatelessWidget {
         child: Text(
           text,
           style: CustomTextStyles.bodyLargeLightblueA700.copyWith(
-            color: appTheme.lightBlueA700,
+            color: appTheme.gray600,
           ),
         ),
       ),

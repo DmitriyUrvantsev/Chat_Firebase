@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 // chat_provider.dart
 import 'package:flutter/material.dart';
 
+import '../../../core/app_export.dart';
 import '../../../data/models/chat/chat_model.dart';
 import '../../../servises/data_base_messages.dart';
-
 
 class ChatProvider extends ChangeNotifier {
   final ChatService _chatService = ChatService();
@@ -44,5 +44,11 @@ class ChatProvider extends ChangeNotifier {
   void updateMessages(List<ChatMessage> newMessages) {
     _messages = newMessages;
     notifyListeners();
+  }
+
+  /// Навигация
+  ///
+  void back() {
+    NavigatorService.goBack();
   }
 }

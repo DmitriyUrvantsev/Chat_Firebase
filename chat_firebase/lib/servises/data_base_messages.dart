@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../data/models/chat/chat_model.dart';
 
-
 class ChatService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  // Метод для создания чата
   Future<String> createChat(String userId1, String userId2) async {
-    final chatId = userId1.compareTo(userId2) > 0 ? '$userId2$userId1' : '$userId1$userId2';
+    // Генерация chatId на основе userId1 и userId2
+    final chatId = userId1.compareTo(userId2) > 0
+        ? '$userId2$userId1'
+        : '$userId1$userId2';
     final chatDoc = _db.collection('chats').doc(chatId);
 
     final chatSnapshot = await chatDoc.get();
@@ -21,22 +24,30 @@ class ChatService {
     return chatId;
   }
 
+  // Метод для отправки сообщения
   Future<void> sendMessage(String chatId, ChatMessage message) async {
-    final messagesCollection = _db.collection('chats').doc(chatId).collection('messages');
+    final messagesCollection =
+        _db.collection('chats').doc(chatId).collection('messages');
+    // Добавление нового сообщения в коллекцию
     await messagesCollection.add(message.toMap());
 
+    // Обновление документа чата с последним сообщением и временем обновления
     await _db.collection('chats').doc(chatId).update({
       'lastMessage': message.toMap(),
       'updatedAt': message.timestamp,
     });
   }
 
+  // Метод для получения потока сообщений
   Stream<List<ChatMessage>> getMessages(String chatId) {
-    return _db.collection('chats').doc(chatId).collection('messages')
-      .orderBy('timestamp')
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-        .map((doc) => ChatMessage.fromMap(doc.data()))
-        .toList());
+    return _db
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp') // Упорядочивание сообщений по времени
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ChatMessage.fromMap(doc.data()))
+            .toList());
   }
 }

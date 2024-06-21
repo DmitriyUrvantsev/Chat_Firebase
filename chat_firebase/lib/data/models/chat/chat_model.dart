@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatMessage {
   final String text;
   final String senderId;
@@ -12,6 +13,7 @@ class ChatMessage {
     this.imageUrl,
   });
 
+  // Метод для преобразования объекта сообщения в Map
   Map<String, dynamic> toMap() {
     return {
       'text': text,
@@ -21,6 +23,7 @@ class ChatMessage {
     };
   }
 
+  // Фабрика для создания объекта сообщения из Map
   factory ChatMessage.fromMap(Map<String, dynamic> map) {
     return ChatMessage(
       text: map['text'],

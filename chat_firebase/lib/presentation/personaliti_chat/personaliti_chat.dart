@@ -1,20 +1,17 @@
-// chat_screen.dart
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/models/chat/chat_model.dart';
 import 'provider/chat_provider.dart';
-import '../../../servises/auth_servises.dart'; // Добавьте этот импорт для получения текущего пользователя
+import '../../../servises/auth_servises.dart'; 
+
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
   final String receiverName;
 
-  const ChatScreen({
-    required this.receiverId,
-    required this.receiverName,
-    Key? key,
-  }) : super(key: key);
+  const ChatScreen({required this.receiverId, required this.receiverName, Key? key}) : super(key: key);
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -27,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId = AuthService().currentUser!.uid; // Используем реальный ID текущего пользователя
+    final currentUserId = AuthService().currentUser!.uid; // Использование реального user ID
     chatProvider.createChat(currentUserId, widget.receiverId);
   }
 
@@ -37,13 +34,12 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId = AuthService().currentUser!.uid; // Используем реальный ID текущего пользователя
+    final currentUserId = AuthService().currentUser!.uid; // Использование реального user ID
 
     ChatMessage message = ChatMessage(
       senderId: currentUserId,
       text: _messageController.text,
       timestamp: Timestamp.now(),
-      imageUrl: null, // Если нужно, можно добавить URL изображения
     );
 
     await chatProvider.sendMessage(message);
@@ -53,7 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
-    final currentUserId = AuthService().currentUser!.uid; // Используем реальный ID текущего пользователя
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +70,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var message = messages[index];
-                    bool isMe = message.senderId == currentUserId;
+                    bool isMe = message.senderId == AuthService().currentUser!.uid; // Использование реального user ID
 
                     return ListTile(
                       title: Align(

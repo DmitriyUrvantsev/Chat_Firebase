@@ -7,42 +7,44 @@ import '../core/app_export.dart';
 
 // ignore: must_be_immutable
 class CustomFloatingTextField extends StatelessWidget {
-  CustomFloatingTextField({
-    Key? key,
-    this.alignment,
-    this.width,
-    this.scrollPadding,
-    this.controller,
-    this.focusNode,
-    this.autofocus = true,
-    this.textStyle,
-    this.obscureText = false,
-    this.textInputAction = TextInputAction.next,
-    this.textInputType = TextInputType.text,
-    this.maxLines,
-    this.hintText,
-    this.hintStyle,
-    this.labelText,
-    this.labelStyle,
-    this.prefix,
-    this.prefixConstraints,
-    this.suffix,
-    this.suffixConstraints,
-    this.contentPadding,
-    this.borderDecoration,
-    this.fillColor,
-    this.filled = true,
-    this.prefixText,
-    this.keyboardType,
-    this.inputFormatters,
-    this.maskInput,
-    this.validator,
-    this.onChanged,
-    this.errorText,
-  }) : super(
+  CustomFloatingTextField(
+      {Key? key,
+      this.alignment,
+      this.width,
+      this.scrollPadding,
+      this.controller,
+      this.focusNode,
+      this.autofocus = true,
+      this.textStyle,
+      this.obscureText = false,
+      this.textInputAction = TextInputAction.next,
+      this.textInputType = TextInputType.text,
+      this.maxLines,
+      this.hintText,
+      this.hintStyle,
+      this.labelText,
+      this.labelStyle,
+      this.prefix,
+      this.prefixConstraints,
+      this.suffix,
+      this.suffixConstraints,
+      this.contentPadding,
+      this.borderDecoration,
+      this.fillColor,
+      this.filled = true,
+      this.prefixText,
+      this.keyboardType,
+      this.inputFormatters,
+      this.maskInput,
+      this.validator,
+      this.onChanged,
+      this.errorText,
+      this.height,
+      this.onSubmitted})
+      : super(
           key: key,
         );
-
+  final double? height;
   final Alignment? alignment;
   final double? width;
   final TextEditingController? scrollPadding;
@@ -69,6 +71,7 @@ class CustomFloatingTextField extends StatelessWidget {
   final String? prefixText;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
+  final Function(String)? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final MaskTextInputFormatter? maskInput;
   final String? errorText;
@@ -91,9 +94,11 @@ class CustomFloatingTextField extends StatelessWidget {
   }
 
   Widget floatingTextFieldWidget(BuildContext context) => SizedBox(
+        height: height ?? 42.adaptSize,
         width: width ?? double.maxFinite,
         child: TextFormField(
           onChanged: onChanged,
+          onFieldSubmitted: onSubmitted,
           inputFormatters: inputFormatters,
           scrollPadding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),

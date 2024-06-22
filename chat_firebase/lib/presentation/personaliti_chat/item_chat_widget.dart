@@ -1,6 +1,8 @@
+import 'package:chat_firebase/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/app_export.dart';
 import '../../data/models/chat/chat_model.dart';
 import '../../servises/auth_servises.dart';
 
@@ -8,8 +10,7 @@ class ItemChatWidget extends StatelessWidget {
   final ChatMessage message;
   final bool isMe;
 
-  const ItemChatWidget({Key? key, required this.message, required this.isMe})
-      : super(key: key);
+  const ItemChatWidget({super.key, required this.message, required this.isMe});
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +20,30 @@ class ItemChatWidget extends StatelessWidget {
       children: [
         if (message.timeChangeDate != null)
           _buildDateWidget(message.timeChangeDate!.toDate()),
-        ListTile(
-          title: Align(
-            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: isMe ? Colors.blue : Colors.grey,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                message.text,
-                style: const TextStyle(color: Colors.white),
+        Padding(
+          // Добавляем отступы для ListTile
+          padding: EdgeInsets.symmetric(horizontal: 6.h),
+          child: ListTile(
+            contentPadding:
+                EdgeInsets.zero, // Убираем внутренние отступы ListTile
+            title: Align(
+              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 282.h),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isMe ? appTheme.green : Colors.grey,
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(23),
+                        topLeft: Radius.circular(23),
+                        topRight: Radius.circular(23)),
+                  ),
+                  child: Text(
+                    message.text,
+                    style: TextStyle(color: appTheme.gray800),
+                  ),
+                ),
               ),
             ),
           ),
@@ -40,210 +53,42 @@ class ItemChatWidget extends StatelessWidget {
   }
 
   Widget _buildDateWidget(DateTime dateTime) {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10.0),
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Text(
-          DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
-          style: TextStyle(color: Colors.black),
-        ),
+    var color = const Color.fromRGBO(140, 168, 191, 1);
+    return Container(
+      width: double.maxFinite,
+      margin: EdgeInsets.symmetric(
+          horizontal: 6.h), // Устанавливаем отступы от краев экрана
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 6.v),
+              child: Divider(
+                color: color,
+              ),
+            ),
+          ),
+          SizedBox(width: 10.h),
+          Text(
+            DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
+            style: TextStyle(
+              color: color,
+            ),
+          ),
+          SizedBox(width: 10.h),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 6.v),
+              child: Divider(
+                color: color,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-
-// // import 'package:flutter/material.dart';
-// // import '../../../core/app_export.dart';
-// // import '../../data/models/chat/chat_model.dart';
-// // import 'provider/chat_provider.dart';
-
-
-// // //Виджет Item в чате ListView===================================================
-// // class ItemChatWidget extends StatelessWidget {
-// //   const ItemChatWidget({
-// //     super.key,
-// //     required this.message,
-// //      required this.isMe,
-// //     //!required this.photo,
-// //     //required this.chatIndex,
-// //    // this.shouldAnimate = false,
-// //     //required this.newMassage,
-// //     //required this.newMessageSlow,
-// //   });
-
-// //   final ChatMessage message;
-// //  final bool isMe;
-// //   //!final String? photo;
-// //  // final int chatIndex;
-// //   //final bool shouldAnimate;
-// //   //final bool newMassage;
-// //  // final bool newMessageSlow;
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     final provider = context.read<ChatProvider>();
-
-// //     return Column(
-// //       children: [
-// //         Padding(
-// //           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-// //           child: Row(
-// //             crossAxisAlignment: CrossAxisAlignment.start,
-// //             children: [
-            
-
-// //               Expanded(
-// //                   child: Align(
-// //                 //!=====================================
-// //                 alignment: isMe
-// //                     ? Alignment.centerRight
-// //                     : Alignment.centerLeft,
-// //                 //!--------------------------------------
-// //                 child: Column(
-// //                   children: [
-// //                     Container(
-// //                       width: 201.h,
-// //                       //margin: EdgeInsets.only(right: 189.h),
-// //                       padding:
-// //                           EdgeInsets.symmetric(horizontal: 15.h, vertical: 8.v),
-// //                       //!=====================================
-// //                       decoration: isMe
-// //                           ? AppDecoration.fillGray
-// //                           : AppDecoration.fillAmber,
-// //                       //!--------------------------------------
-// //                       child: Column(
-// //                         mainAxisSize: MainAxisSize.min,
-// //                         crossAxisAlignment: CrossAxisAlignment.start,
-// //                         mainAxisAlignment: MainAxisAlignment.center,
-// //                         children: [
-// //                           SizedBox(height: 1.v),
-// //                           // isMe
-// //                           //     ? 
-// //                               Text(message.text,
-// //                                   maxLines: 10,
-// //                                   overflow: TextOverflow.ellipsis,
-// //                                   style: CustomTextStyles
-// //                                       .bodySmallffffb700)
-// //                               // : 
-// //                               // AnimatedTextKit(
-// //                               //     // onFinished: () async {
-// //                               //     //   if (message.trim().length > 10) {
-// //                               //     //     await Future.delayed(
-// //                               //     //      //!   const Duration(milliseconds: 2000));
-// //                               //     //    //! provider.isAutoScrolling = false;
-// //                               //     //   }
-// //                               //     // },
-// //                               //     animatedTexts: [
-// //                               //       TypewriterAnimatedText(
-// //                               //         speed: const Duration(microseconds: 500),
-// //                               //         message.trim(),
-// //                               //         textStyle: CustomTextStyles
-// //                               //             .bodySmallInterErrorContainer
-// //                               //             .copyWith(height: 1.23),
-// //                               //       ),
-// //                               //     ],
-// //                               //     totalRepeatCount: 1,
-// //                               //   ),
-// //                         ],
-// //                       ),
-// //                     ),
-
-// // //!-------------------- фотка ----------------------
-
-// //                   //  if (chatIndex != 0) ...[
-// //                       // Column(
-// //                       //   children: [
-// //                       //     // const SizedBox(height: 10),
-// //                       //     if (photo != null) ...[
-// //                       //       const SizedBox(height: 10),
-// //                       //       SizedBox(
-// //                       //         height: 208.v,
-// //                       //         width: 201.h,
-// //                       //         child: ClipRRect(
-// //                       //           borderRadius: BorderRadius.circular(15.0),
-// //                       //           clipBehavior: Clip.hardEdge,
-// //                       //           child: FittedBox(
-// //                       //             alignment: Alignment.topCenter,
-// //                       //             fit: BoxFit.cover,
-// //                       //             child: SizedBox(
-// //                       //               height: 288.v,
-// //                       //               width: 201.h,
-// //                       //               child: CustomImageView(
-// //                       //                 onTap: () {
-// //                       //                   // provider.vipStatus
-// //                       //                   //     ? provider.showPhoto()
-// //                       //                   //     : provider.unlockPhoto();
-// //                       //                 },
-// //                       //                 imagePath: photo,
-// //                       //               ),
-// //                       //             ),
-// //                       //           ),
-// //                       //         ),
-// //                       //       ),
-// //                       //     ],
-// //                       //   ],
-// //                       // ),
-// //                     //]
-// //                   ],
-// //                 ),
-// //               )),
-// //             ],
-// //           ),
-// //         ),
-// //         // Row(
-// //         //   children: [
-// //         //     const SizedBox(width: 15),
-// //         //     SizedBox(
-// //         //       width: 200.h,
-// //         //       // height: 35.v,
-// //         //       child: (provider.ratingTimeOut == 0 && newMassage)
-// //         //           ? ConstrainedBox(
-// //         //               constraints: BoxConstraints(
-// //         //                 maxHeight: 60.v,
-// //         //                 minHeight: 60.v,
-// //         //               ),
-// //         //               child: const AnimatedRatingStars())
-// //         //           : (chatIndex != 0 && newMessageSlow)
-// //         //               ? Container(
-// //         //                   height: 60.v,
-// //         //                   decoration: AppDecoration.outlineErrorContainer
-// //         //                       .copyWith(
-// //         //                           borderRadius:
-// //         //                               BorderRadiusStyle.circleBorder12,
-// //         //                           color: Colors.black.withOpacity(0.1)),
-// //         //                   // color: Colors.black.withOpacity(0.4),
-// //         //                   child: Center(
-// //         //                       child: Padding(
-// //         //                     padding: const EdgeInsets.only(left: 15.0),
-// //         //                     child: Text(
-// //         //                         provider.scr21ModelObj
-// //         //                             .thankYouList[provider.indexThankYouList],
-// //         //                         maxLines: 10,
-// //         //                         overflow: TextOverflow.ellipsis,
-// //         //                         style: CustomTextStyles
-// //         //                             .bodySmallInterThanksContainer
-// //         //                             .copyWith(
-// //         //                           height: 1.23,
-// //         //                         )),
-// //         //                   )
-
-// //         //                       // Text(
-// //         //                       //   provider.scr21ModelObj
-// //         //                       //       .thankYouList[provider.indexThankYouList],
-// //         //                       //   style: const TextStyle(color: Colors.white),
-// //         //                       // ),
-// //         //                       ))
-// //         //               : const SizedBox.shrink(),
-// //         //     ),
-// //         //   ],
-// //         // ),
-// //       ],
-// //     );
-// //   }
-// // }

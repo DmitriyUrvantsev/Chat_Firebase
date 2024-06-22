@@ -16,6 +16,8 @@ class ImageConstant {
 
   // Главный экран images
   static String imgNavGray100 = '$imagePath/img_nav_gray_100.svg';
+  static String microphon = '$imagePath/microphon.png';
+  static String skip = '$imagePath/skip.png';
 
   static String imgNavGray600 = '$imagePath/img_nav_gray_600.svg';
 

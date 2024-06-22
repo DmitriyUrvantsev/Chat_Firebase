@@ -9,6 +9,8 @@ import '../../servises/auth_servises.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
+import '../../widgets/castom_icon_button.dart';
+import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import 'item_chat_widget.dart';
 import 'provider/chat_provider.dart';
@@ -30,8 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId = AuthService().currentUser?.uid ??
-        'нулл'; // Использование реального user ID
+    final currentUserId = AuthService().currentUser?.uid ?? 'нулл';
     chatProvider.createChat(currentUserId, widget.user.uid);
 
     print(currentUserId);
@@ -50,18 +51,16 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId = AuthService().currentUser?.uid ??
-        'нулл'; // Использование реального user ID
+    final currentUserId = AuthService().currentUser?.uid ?? 'нулл';
 
     final currentTimestamp = Timestamp.now();
 
     // Определение timeChangeDate
     Timestamp? timeChangeDate;
-    if (chatProvider.lastTimeChangeDate == null ||
-        !isSameMinute(currentTimestamp, chatProvider.lastTimeChangeDate!)) {
-      timeChangeDate = currentTimestamp;
-      chatProvider.lastTimeChangeDate = currentTimestamp;
-    }
+    //!if (chatProvider.lastTimeChangeDate == null || !isSameMinute(currentTimestamp, chatProvider.lastTimeChangeDate!)) {
+    timeChangeDate = currentTimestamp;
+    //! chatProvider.lastTimeChangeDate = currentTimestamp;
+    //!}
 
     ChatMessage message = ChatMessage(
       senderId: currentUserId,
@@ -109,7 +108,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: _sectionCustomAppBar(context),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.0),
+        padding: EdgeInsets.symmetric(horizontal: 15.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -142,14 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       bool isMe =
                           message.senderId == AuthService().currentUser?.uid;
 
-                      return
-                      //  Column(
-                      //   children: [
-                      //     if (shouldShowTimeChange(message, previousMessage))
-                      //       _buildDateWidget(message.timeChangeDate!.toDate()),
-                          ItemChatWidget(isMe: isMe, message: message);
-                      //   ],
-                      // );
+                      return ItemChatWidget(isMe: isMe, message: message);
                     },
                   );
                 },
@@ -239,41 +231,52 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Padding _buildSectionTextField() {
+  Widget _buildSectionTextField() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: CustomFloatingTextField(
-        controller: _messageController,
-        hintText: 'Enter a message...',
-        prefix: Icon(Icons.message, color: Colors.grey),
-        suffix: IconButton(
-          icon: Icon(Icons.send, color: Colors.blue),
-          onPressed: _sendMessage,
-        ),
-        borderDecoration: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: BorderSide.none,
-        ),
-        fillColor: Colors.grey[200],
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 20.v),
+      child: Row(
+        children: <Widget>[
+          CustomIconButton(
+              onTap: () {},
+              height: 42.adaptSize,
+              width: 42.adaptSize,
+              padding: EdgeInsets.all(10.h),
+              child: CustomImageView(
+                fit: BoxFit.fitHeight,
+                imagePath: ImageConstant.skip,
+              )),
+          SizedBox(width: 8.h),
+          Expanded(
+            child: CustomFloatingTextField(
+              controller: _messageController,
+              autofocus: false,
+              labelStyle: CustomTextStyles.bodyLargeGray80020,
+              labelText: 'Сообщение',
+              onChanged: (value) {
+                // Implement search functionality here
+              },
+              onSubmitted: (val) => _sendMessage(),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              borderDecoration: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              fillColor: appTheme.gray200,
+            ),
+          ),
+          SizedBox(width: 8.h),
+          CustomIconButton(
+              onTap: _sendMessage,
+              height: 42.adaptSize,
+              width: 42.adaptSize,
+              padding: EdgeInsets.all(10.h),
+              child: CustomImageView(
+                fit: BoxFit.fitHeight,
+                imagePath: ImageConstant.microphon,
+              )),
+        ],
       ),
     );
   }
-
-  // Widget _buildDateWidget(DateTime dateTime) {
-  //   return Center(
-  //     child: Container(
-  //       margin: EdgeInsets.symmetric(vertical: 10.0),
-  //       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-  //       decoration: BoxDecoration(
-  //         color: Colors.grey[300],
-  //         borderRadius: BorderRadius.circular(20.0),
-  //       ),
-  //       child: Text(
-  //         DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
-  //         style: TextStyle(color: Colors.black),
-  //       ),
-  //     ),
-  //   );
-  // }
 }

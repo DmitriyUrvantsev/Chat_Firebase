@@ -141,7 +141,6 @@ class PrimaryColors {
   // Blackc
   Color get black9004c => const Color(0X4C000000);
 
-
   // BlueGray
   Color get blueGray100 => const Color(0XFFD9D9D9);
 
@@ -150,7 +149,7 @@ class PrimaryColors {
 
   // Gray
   Color get gray100 => const Color(0XFFF6F6F6);
-  Color get gray200 => const Color(0XFFEBEBEB);
+  Color get gray200 => const Color.fromRGBO(232, 239, 244, 1);
   Color get gray300 => const Color(0XFFE3E3E3);
   Color get gray400 => const Color(0XFFC6C6C8);
   Color get gray50 => const Color(0XFFFBFBFB);
@@ -159,12 +158,13 @@ class PrimaryColors {
 
   // Green
   Color get green700 => const Color(0XFF38A213);
+  Color get green => const Color.fromRGBO(56, 238, 101, 1);
 
   // LightBlue
   Color get lightBlueA700 => const Color(0XFF0098EE);
 
-    // Red
-  Color get red =>  const Color.fromARGB(255, 238, 59, 0);
+  // Red
+  Color get red => const Color.fromARGB(255, 238, 59, 0);
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();

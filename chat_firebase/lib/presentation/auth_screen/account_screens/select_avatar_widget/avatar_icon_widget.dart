@@ -15,11 +15,6 @@ class AvatarIconWidget extends StatefulWidget {
 class _AvatarIconWidgetState extends State<AvatarIconWidget> {
   late Future<List<FirebaseStorageFile>> futureFiles;
 
-  //! @override
-  //! void initState() {
-  //!   super.initState();
-  //!   futureFiles = FirebaseApi.listAll('files/');
-  //! }
 
   @override
   Widget build(BuildContext context) {
@@ -43,50 +38,6 @@ class _AvatarIconWidgetState extends State<AvatarIconWidget> {
               fit: BoxFit.cover,
             ),
           ),
-
-
-        // FutureBuilder<List<FirebaseStorageFile>>(
-        //     future: futureFiles,
-        //     builder: (context, snapshot) {
-        //       switch (snapshot.connectionState) {
-        //         case ConnectionState.waiting:
-        //           return const Center(
-        //               child: CircularProgressIndicator(
-        //             color: Colors.transparent,
-        //           ));
-        //         default:
-        //           if (snapshot.hasError) {
-        //             return const Center(child: Text('Some error occurred!'));
-        //           } else if (snapshot.hasData) {
-        //             if (snapshot.data!.isNotEmpty) {
-        //               final files = snapshot.data!;
-        //               final file = files.first;
-
-        //               return Container(
-        //                 height: 76.adaptSize,
-        //                 width: 76.adaptSize,
-        //                 clipBehavior: Clip.hardEdge,
-        //                 decoration: const BoxDecoration(
-        //                   shape: BoxShape.circle,
-        //                 ),
-        //                 child: Image.network(
-        //                   watch.currentAvatar ?? file.url,
-        //                   width: 76,
-        //                   height: 76,
-        //                   fit: BoxFit.cover,
-        //                 ),
-        //               );
-        //             }
-        //           } else {
-        //             return const SizedBox.shrink();
-        //           }
-        //       }
-        //       return const SizedBox.shrink();
-        //     }),
-
-
-
-
       ],
     );
   }

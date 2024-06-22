@@ -1,32 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../data/models/chat/chat_model.dart';
+import '../../servises/auth_servises.dart';
 
 class ItemChatWidget extends StatelessWidget {
-  const ItemChatWidget({
-    super.key,
-    required this.isMe,
-    required this.message,
-  });
-
-  final bool isMe;
   final ChatMessage message;
+  final bool isMe;
+
+  const ItemChatWidget({Key? key, required this.message, required this.isMe})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Align(
-        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: isMe ? Colors.blue : Colors.grey,
-            borderRadius: BorderRadius.circular(10),
+    final bool isMe = message.senderId == AuthService().currentUser?.uid;
+
+    return Column(
+      children: [
+        if (message.timeChangeDate != null)
+          _buildDateWidget(message.timeChangeDate!.toDate()),
+        ListTile(
+          title: Align(
+            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: isMe ? Colors.blue : Colors.grey,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                message.text,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
           ),
-          child: Text(
-            message.text,
-            style: const TextStyle(color: Colors.white),
-          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDateWidget(DateTime dateTime) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Text(
+          DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
+          style: TextStyle(color: Colors.black),
         ),
       ),
     );

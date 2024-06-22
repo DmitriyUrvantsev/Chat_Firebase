@@ -1,18 +1,17 @@
-import 'package:chat_firebase/core/utils/size_utils.dart';
 import 'package:chat_firebase/widgets/app_bar/appbar_subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../../../data/models/chat/chat_model.dart';
 import '../../core/app_export.dart';
 import '../../data/models/user/user_app.dart';
+import '../../servises/auth_servises.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_text_field.dart';
 import 'item_chat_widget.dart';
 import 'provider/chat_provider.dart';
-import '../../../servises/auth_servises.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserAppData user;
@@ -54,10 +53,21 @@ class _ChatScreenState extends State<ChatScreen> {
     final currentUserId = AuthService().currentUser?.uid ??
         'нулл'; // Использование реального user ID
 
+    final currentTimestamp = Timestamp.now();
+
+    // Определение timeChangeDate
+    Timestamp? timeChangeDate;
+    if (chatProvider.lastTimeChangeDate == null ||
+        !isSameMinute(currentTimestamp, chatProvider.lastTimeChangeDate!)) {
+      timeChangeDate = currentTimestamp;
+      chatProvider.lastTimeChangeDate = currentTimestamp;
+    }
+
     ChatMessage message = ChatMessage(
       senderId: currentUserId,
       text: _messageController.text,
-      timestamp: Timestamp.now(),
+      timestamp: currentTimestamp,
+      timeChangeDate: timeChangeDate,
     );
 
     await chatProvider.sendMessage(message);
@@ -69,12 +79,27 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut,
+      _scrollController.jumpTo(
+        _scrollController.position.minScrollExtent,
       );
     }
+  }
+
+  bool shouldShowTimeChange(
+      ChatMessage currentMessage, ChatMessage? previousMessage) {
+    if (previousMessage == null) {
+      return currentMessage.timeChangeDate != null;
+    }
+    return !isSameMinute(currentMessage.timestamp, previousMessage.timestamp);
+  }
+
+  bool isSameMinute(Timestamp timestamp1, Timestamp timestamp2) {
+    return DateTime.fromMillisecondsSinceEpoch(
+                timestamp1.millisecondsSinceEpoch)
+            .difference(DateTime.fromMillisecondsSinceEpoch(
+                timestamp2.millisecondsSinceEpoch))
+            .inMinutes ==
+        0;
   }
 
   @override
@@ -97,7 +122,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
 
                   var messagesOrign = snapshot.data ?? [];
-
                   var messages = messagesOrign.reversed.toList();
 
                   // Прокрутка к последнему добавленному сообщению при первой загрузке
@@ -111,12 +135,21 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       var message = messages[index];
-                      bool isMe = message.senderId ==
-                          AuthService()
-                              .currentUser
-                              ?.uid; // Использование реального user ID
+                      ChatMessage? previousMessage;
+                      if (index < messages.length - 1) {
+                        previousMessage = messages[index + 1];
+                      }
+                      bool isMe =
+                          message.senderId == AuthService().currentUser?.uid;
 
-                      return ItemChatWidget(isMe: isMe, message: message);
+                      return
+                      //  Column(
+                      //   children: [
+                      //     if (shouldShowTimeChange(message, previousMessage))
+                      //       _buildDateWidget(message.timeChangeDate!.toDate()),
+                          ItemChatWidget(isMe: isMe, message: message);
+                      //   ],
+                      // );
                     },
                   );
                 },
@@ -226,4 +259,21 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
+  // Widget _buildDateWidget(DateTime dateTime) {
+  //   return Center(
+  //     child: Container(
+  //       margin: EdgeInsets.symmetric(vertical: 10.0),
+  //       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+  //       decoration: BoxDecoration(
+  //         color: Colors.grey[300],
+  //         borderRadius: BorderRadius.circular(20.0),
+  //       ),
+  //       child: Text(
+  //         DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
+  //         style: TextStyle(color: Colors.black),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

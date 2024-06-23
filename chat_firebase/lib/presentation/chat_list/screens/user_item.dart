@@ -1,3 +1,4 @@
+import 'package:chat_firebase/presentation/auth_screen/provider/maim_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/models/user/user_app.dart';
@@ -10,19 +11,26 @@ class UserItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final users = Provider.of<List<UserAppData>>(context);
-    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    //final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     return ListView.builder(
       itemCount: users.length,
       itemBuilder: (context, index) {
+        final read = context.read<MainScreenProvider>();
         final user = users[index];
         final nik = '${user.name?[0]}${user.surName?[0]}';
+        final color = read.getColorForLetter(user.name?[0] ?? 'a');
+
+        final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+        if (user.uid == currentUserId) {
+          // Пропустить текущего пользователя
+          return const SizedBox.shrink();
+        }
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              //if (index > 0)
               const Divider(height: 1, color: Color(0xFFE0E0E0)),
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 8),
@@ -46,9 +54,7 @@ class UserItem extends StatelessWidget {
                         width: 50,
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF1FDB5F), Color(0xFF31C764)],
-                          ),
+                          color: color,
                           borderRadius: BorderRadius.circular(34),
                         ),
                         child: Center(

@@ -46,29 +46,39 @@ class ChatScreenWidget extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: CustomFloatingTextField(
-                autofocus: false,
-                labelStyle: CustomTextStyles.bodyLargeGray80020,
-                labelText: 'Поиск',
-                prefix: const Icon(Icons.search, color: Color(0xFF5E7A90)),
-                onChanged: (value) {
-                  // Implement search functionality here
-                },
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                borderDecoration: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                fillColor: appTheme.gray200,
-              ),
-            ),
-            Expanded(child: UserItem()),
+            _sectionSearch(),
+          const  Expanded(child: UserItem()),
           ],
         ),
       ),
     );
+  }
+
+//
+//
+//
+///-----------------------------------------------------------------------------
+
+
+  Padding _sectionSearch() {
+    return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: CustomFloatingTextField(
+              autofocus: false,
+              labelStyle: CustomTextStyles.bodyLargeGray80020,
+              labelText: 'Поиск',
+              prefix: const Icon(Icons.search, color: Color(0xFF5E7A90)),
+              onChanged: (value) {
+                // Implement search functionality here
+              },
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              borderDecoration: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              fillColor: appTheme.gray200,
+            ),
+          );
   }
 }

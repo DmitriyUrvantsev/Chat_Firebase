@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -151,7 +152,17 @@ class MainScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
   //==============================================================================
-//
+Color getColorForLetter(String letter) {
+  // Используем хэш-функцию для генерации цвета
+  final int hash = letter.codeUnitAt(0);
+  final Random random = Random(hash);
+  return Color.fromARGB(
+    255,
+    random.nextInt(256),
+    random.nextInt(256),
+    random.nextInt(256),
+  );
+}
 
   @override
   void dispose() {

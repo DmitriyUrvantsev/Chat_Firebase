@@ -4,14 +4,14 @@ class ChatMessage {
   final String text;
   final String senderId;
   final Timestamp timestamp;
-    final Timestamp? timeChangeDate; // Одна переменная для времени начала переписки и даты смены времени
+  final Timestamp? timeChangeDate; // Одна переменная для времени начала переписки и даты смены времени
   final String? imageUrl;
 
   ChatMessage({
     required this.text,
     required this.senderId,
     required this.timestamp,
-     this.timeChangeDate,
+    this.timeChangeDate,
     this.imageUrl,
   });
 
@@ -22,7 +22,7 @@ class ChatMessage {
       'senderId': senderId,
       'timestamp': timestamp,
       'timeChangeDate': timeChangeDate,
-      'imageUrl': imageUrl,
+      'imageUrl': imageUrl, //! Добавлен imageUrl
     };
   }
 
@@ -33,7 +33,7 @@ class ChatMessage {
       senderId: map['senderId'],
       timestamp: map['timestamp'],
       timeChangeDate: map['timeChangeDate'],
-      imageUrl: map['imageUrl'],
+      imageUrl: map['imageUrl'], //! Добавлен imageUrl
     );
   }
 }

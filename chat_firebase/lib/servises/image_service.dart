@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ImageService {
   final ImagePicker _imagePicker = ImagePicker();
@@ -98,6 +99,14 @@ class ImageService {
         ),
       );
     }
-    return null;
+  }
+
+  //! Новый метод для загрузки изображения в Firebase Storage
+  Future<String> uploadImage(String chatId, File image) async {
+    final storageRef = FirebaseStorage.instance.ref().child('chat_images').child(chatId).child(DateTime.now().millisecondsSinceEpoch.toString());
+    final uploadTask = storageRef.putFile(image);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
   }
 }

@@ -1,33 +1,36 @@
-import 'dart:io';
+// lib/presentation/auth_screen/provider/chat_provider.dart
 
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/widgets.dart';
-
-// chat_provider.dart
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../core/app_export.dart';
 import '../../../data/models/chat/chat_model.dart';
+import '../../../servises/auth_servises.dart';
 import '../../../servises/data_base_messages.dart';
 import '../../../servises/image_service.dart';
+
+// lib/presentation/auth_screen/provider/chat_provider.dart
+
+
+
 class ChatProvider extends ChangeNotifier {
   final ChatService _chatService = ChatService();
   String? _currentChatId;
   List<ChatMessage> _messages = [];
+  final ImageService _imageService = ImageService();
+  File? photo;  // Добавляем переменную для хранения выбранного изображения
+  UploadTask? uploadTask;
 
-  // Геттеры для текущего чата и сообщений
   String? get currentChatId => _currentChatId;
   List<ChatMessage> get messages => _messages;
 
-  // Метод для создания чата
   Future<void> createChat(String userId1, String userId2) async {
     _currentChatId = await _chatService.createChat(userId1, userId2);
     notifyListeners();
   }
 
-  // Метод для получения потока сообщений
   Stream<List<ChatMessage>> getMessages() {
     if (_currentChatId != null) {
       return _chatService.getMessages(_currentChatId!).map((messages) {
@@ -38,7 +41,6 @@ class ChatProvider extends ChangeNotifier {
     return const Stream.empty();
   }
 
-  // Метод для отправки сообщения
   Future<void> sendMessage(ChatMessage message) async {
     if (_currentChatId != null) {
       final currentTime = message.timestamp;
@@ -46,7 +48,6 @@ class ChatProvider extends ChangeNotifier {
 
       if (_messages.isNotEmpty) {
         final lastMessage = _messages.last;
-        // Сравнение по миллисекундам
         if (!isSameMinute(currentTime, lastMessage.timestamp)) {
           timeChangeDate = currentTime;
         }
@@ -59,19 +60,18 @@ class ChatProvider extends ChangeNotifier {
         text: message.text,
         timestamp: currentTime,
         timeChangeDate: timeChangeDate,
+        imageUrl: message.imageUrl,  //! Добавлено поле imageUrl
       );
 
       await _chatService.sendMessage(_currentChatId!, updatedMessage);
     }
   }
 
-  // Метод для обновления списка сообщений
   void updateMessages(List<ChatMessage> newMessages) {
     _messages = newMessages;
     notifyListeners();
   }
 
-  // Проверка, являются ли временные метки из одной и той же минуты
   bool isSameMinute(Timestamp timestamp1, Timestamp timestamp2) {
     final dateTime1 = DateTime.fromMillisecondsSinceEpoch(timestamp1.millisecondsSinceEpoch);
     final dateTime2 = DateTime.fromMillisecondsSinceEpoch(timestamp2.millisecondsSinceEpoch);
@@ -83,34 +83,44 @@ class ChatProvider extends ChangeNotifier {
         dateTime1.minute == dateTime2.minute;
   }
 
-//!=========Avatar Model========================================================
-//!=========Avatar Model========================================================
-
-  final imagePicer = ImagePicker();
-  File? photo;
-  UploadTask? uploadTask;
-  final ImageService _imageService = ImageService();
- 
-//=====================функция загрузки фото на сервер==========================
-   Future<void> pickImage(ImageSource source) async {
-    photo = await _imageService.pickImage(source);
+  Future<void> pickImage(ImageSource source) async {
+    photo = await _imageService.pickImage(source);  // Выбор изображения из галереи или камеры
     if (photo != null) {
-      notifyListeners();
+      notifyListeners();  // Уведомляем слушателей об изменении состояния
       print(photo);
+      showImageDialog();  //! Вызов функции для показа диалогового окна
     }
   }
 
   Future<void> showImageSource(BuildContext context) async {
     await _imageService.showImageSource(context, (ImageSource source) {
-      pickImage(source);
+      pickImage(source);  // Выбор изображения
     });
   }
 
+  Future<void> showImageDialog() async {
+    notifyListeners();  // Уведомляем слушателей для отображения диалогового окна
+  }
 
+  Future<void> sendImageMessage(String text) async {
+    if (photo != null && _currentChatId != null) {
+      final imageUrl = await _imageService.uploadImage(_currentChatId!, photo!);  // Загрузка изображения в Firebase Storage
+      final currentUserId = AuthService().currentUser?.uid ?? 'null';
+      final currentTimestamp = Timestamp.now();
+      
+      ChatMessage message = ChatMessage(
+        senderId: currentUserId,
+        text: text,
+        timestamp: currentTimestamp,
+        imageUrl: imageUrl,  //! Добавляем URL изображения к сообщению
+      );
 
+      await sendMessage(message);  // Отправка сообщения с изображением
+      photo = null;  // Сбрасываем выбранное изображение
+      notifyListeners();
+    }
+  }
 
-
-  // Навигация
   void back() {
     NavigatorService.goBack();
   }

@@ -39,9 +39,18 @@ class ItemChatWidget extends StatelessWidget {
                         topLeft: Radius.circular(23),
                         topRight: Radius.circular(23)),
                   ),
-                  child: Text(
-                    message.text,
-                    style: TextStyle(color: appTheme.gray800),
+                  child: Column(
+                    children: [
+                      if(message.imageUrl != null)
+                      CustomImageView(
+                fit: BoxFit.fitHeight,
+                imagePath: message.imageUrl,
+              ),
+                      Text(
+                        message.text,
+                        style: TextStyle(color: appTheme.gray800),
+                      ),
+                    ],
                   ),
                 ),
               ),

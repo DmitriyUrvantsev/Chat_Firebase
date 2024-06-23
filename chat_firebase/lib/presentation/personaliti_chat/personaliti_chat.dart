@@ -2,6 +2,7 @@ import 'package:chat_firebase/widgets/app_bar/appbar_subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart'; // Добавлено для использования Provider
 import '../../../data/models/chat/chat_model.dart';
 import '../../core/app_export.dart';
 import '../../data/models/user/user_app.dart';
@@ -57,10 +58,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Определение timeChangeDate
     Timestamp? timeChangeDate;
-    //!if (chatProvider.lastTimeChangeDate == null || !isSameMinute(currentTimestamp, chatProvider.lastTimeChangeDate!)) {
+    //! if (chatProvider.lastTimeChangeDate == null || !isSameMinute(currentTimestamp, chatProvider.lastTimeChangeDate!)) {
     timeChangeDate = currentTimestamp;
     //! chatProvider.lastTimeChangeDate = currentTimestamp;
-    //!}
+    //! }
 
     ChatMessage message = ChatMessage(
       senderId: currentUserId,
@@ -105,50 +106,57 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
 
-    return Scaffold(
-      appBar: _sectionCustomAppBar(context),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Expanded(
-              child: StreamBuilder<List<ChatMessage>>(
-                stream: chatProvider.getMessages(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+        appBar: _sectionCustomAppBar(context),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              //if (chatProvider.photo == null)
+              Expanded(
+                child: StreamBuilder<List<ChatMessage>>(
+                  stream: chatProvider.getMessages(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-                  var messagesOrign = snapshot.data ?? [];
-                  var messages = messagesOrign.reversed.toList();
+                    var messagesOrign = snapshot.data ?? [];
+                    var messages = messagesOrign.reversed.toList();
 
-                  // Прокрутка к последнему добавленному сообщению при первой загрузке
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _scrollToBottom();
-                  });
+                    // Прокрутка к последнему добавленному сообщению при первой загрузке
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _scrollToBottom();
+                    });
 
-                  return ListView.builder(
-                    reverse: true,
-                    controller: _scrollController,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      var message = messages[index];
-                      ChatMessage? previousMessage;
-                      if (index < messages.length - 1) {
-                        previousMessage = messages[index + 1];
-                      }
-                      bool isMe =
-                          message.senderId == AuthService().currentUser?.uid;
+                    return ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        var message = messages[index];
+                        ChatMessage? previousMessage;
+                        if (index < messages.length - 1) {
+                          previousMessage = messages[index + 1];
+                        }
+                        bool isMe =
+                            message.senderId == AuthService().currentUser?.uid;
 
-                      return ItemChatWidget(isMe: isMe, message: message);
-                    },
-                  );
-                },
+                        return ItemChatWidget(isMe: isMe, message: message);
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-            _buildSectionTextField(context),
-          ],
+              if (chatProvider.photo != null)
+                _buildImageDialog(context, chatProvider),
+              if (chatProvider.photo == null) _buildSectionTextField(context),
+              //! Добавлено отображение диалогового окна для изображения
+            ],
+          ),
         ),
       ),
     );
@@ -277,6 +285,131 @@ class _ChatScreenState extends State<ChatScreen> {
                 imagePath: ImageConstant.microphon,
               )),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTextFieldImage(BuildContext context) {
+    final chatProvider = context.read<ChatProvider>();
+
+    return Row(
+      children: <Widget>[
+        CustomIconButton(
+          onTap: () {
+            Navigator.of(context).pop();
+            chatProvider.photo =
+                null; // Закрытие диалога и очистка выбранного изображения
+          },
+          height: 42.adaptSize,
+          width: 42.adaptSize,
+          padding: EdgeInsets.all(5.h),
+          child: Icon(Icons.cancel,
+              color: Colors.grey), // Изменение цвета на серый
+        ),
+        SizedBox(width: 8.h),
+        Expanded(
+          child: CustomFloatingTextField(
+            controller: _messageController,
+            autofocus: false,
+            labelStyle: CustomTextStyles.bodyLargeGray80020,
+            labelText: 'Сообщение',
+            onChanged: (value) {
+              // Implement search functionality here
+            },
+            onSubmitted: (val) {
+              _sendMessage();
+              chatProvider.photo =
+                  null; // Закрытие диалога и очистка выбранного изображения
+            },
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+            borderDecoration: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            fillColor: appTheme.gray200,
+          ),
+        ),
+        SizedBox(width: 8.h),
+        CustomIconButton(
+          onTap: () {
+            final currentUserId = AuthService().currentUser?.uid ?? 'нулл';
+            final currentTimestamp = Timestamp.now();
+            Timestamp? timeChangeDate = currentTimestamp;
+
+            ChatMessage message = ChatMessage(
+              senderId: currentUserId,
+              text: _messageController.text,
+              timestamp: currentTimestamp,
+              timeChangeDate: timeChangeDate,
+              imageUrl:
+                  chatProvider.photo?.path, // Сохранение пути к изображению
+            );
+
+            chatProvider.sendMessage(message);
+            _messageController.clear();
+            chatProvider.photo =
+                null; // Отправка сообщения и очистка выбранного изображения
+          },
+          height: 42.adaptSize,
+          width: 42.adaptSize,
+          padding: EdgeInsets.all(5.h),
+          child: const Icon(Icons.send,
+              color: Colors.grey), // Изменение цвета на серый
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageDialog(BuildContext context, ChatProvider chatProvider) {
+    return Dialog(
+      insetPadding: EdgeInsets.all(5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      backgroundColor: Colors.transparent,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            height: 380.v,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color: Colors.grey.shade400,
+                width: 2,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (chatProvider.photo != null)
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.lightBlue.shade100,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.file(
+                            chatProvider.photo!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  _buildSectionTextFieldImage(context),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

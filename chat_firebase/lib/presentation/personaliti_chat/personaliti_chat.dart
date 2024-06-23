@@ -147,7 +147,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
-            _buildSectionTextField(),
+            _buildSectionTextField(context),
           ],
         ),
       ),
@@ -231,13 +231,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildSectionTextField() {
+  Widget _buildSectionTextField(BuildContext context) {
+    final read = context.read<ChatProvider>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 20.v),
       child: Row(
         children: <Widget>[
           CustomIconButton(
-              onTap: () {},
+              onTap: () => read.showImageSource(context),
               height: 42.adaptSize,
               width: 42.adaptSize,
               padding: EdgeInsets.all(10.h),

@@ -108,37 +108,4 @@ class K3AccounrScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-  /// Common widget
-  // Widget _sectionRowNameSurNameChous(
-  //   BuildContext context, {
-  //   required String action,
-  //   required String action1,
-  //   Function? onTapRow,
-  // }) {
-  //   return GestureDetector(
-  //       onTap: () {
-  //         onTapRow!.call();
-  //       },
-  //       child: Container(
-  //           padding: EdgeInsets.fromLTRB(16.h, 12.v, 16.h, 11.v),
-  //           decoration: AppDecoration.outlineGray,
-  //           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //             Text(action,
-  //                 style: CustomTextStyles.bodyLargeOnPrimary
-  //                     .copyWith(color: theme.colorScheme.onPrimary)),
-  //             const Spacer(),
-  //             Padding(
-  //                 padding: EdgeInsets.only(top: 2.v),
-  //                 child: Text(action1,
-  //                     style: theme.textTheme.bodyLarge!
-  //                         .copyWith(color: appTheme.gray600))),
-  //             CustomImageView(
-  //                 color: PrimaryColors().gray400,
-  //                 imagePath: ImageConstant.imgArrowRightGray400,
-  //                 height: 21.v,
-  //                 width: 20.h,
-  //                 margin: EdgeInsets.only(left: 10.h))
-  //           ])));
-  // }
 }

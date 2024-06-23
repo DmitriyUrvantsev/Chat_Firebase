@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 
 // chat_provider.dart
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../core/app_export.dart';
 import '../../../data/models/chat/chat_model.dart';
 import '../../../servises/data_base_messages.dart';
+import '../../../servises/image_service.dart';
 class ChatProvider extends ChangeNotifier {
   final ChatService _chatService = ChatService();
   String? _currentChatId;
@@ -77,6 +82,33 @@ class ChatProvider extends ChangeNotifier {
         dateTime1.hour == dateTime2.hour &&
         dateTime1.minute == dateTime2.minute;
   }
+
+//!=========Avatar Model========================================================
+//!=========Avatar Model========================================================
+
+  final imagePicer = ImagePicker();
+  File? photo;
+  UploadTask? uploadTask;
+  final ImageService _imageService = ImageService();
+ 
+//=====================функция загрузки фото на сервер==========================
+   Future<void> pickImage(ImageSource source) async {
+    photo = await _imageService.pickImage(source);
+    if (photo != null) {
+      notifyListeners();
+      print(photo);
+    }
+  }
+
+  Future<void> showImageSource(BuildContext context) async {
+    await _imageService.showImageSource(context, (ImageSource source) {
+      pickImage(source);
+    });
+  }
+
+
+
+
 
   // Навигация
   void back() {

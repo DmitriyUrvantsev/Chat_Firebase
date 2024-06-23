@@ -14,6 +14,7 @@ import 'package:chat_firebase/widgets/custom_bottom_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/app_export.dart';
+import '../../../servises/image_service.dart';
 
 class MainScreenProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -113,7 +114,6 @@ class MainScreenProvider extends ChangeNotifier {
     AuthService().signOut();
   }
 
-//==============================================================================
 
 //!=========Avatar Model========================================================
 //!=========Avatar Model========================================================
@@ -122,30 +122,21 @@ class MainScreenProvider extends ChangeNotifier {
   final imagePicer = ImagePicker();
   File? photo;
   UploadTask? uploadTask;
-
+  final ImageService _imageService = ImageService();
+ 
 //=====================функция загрузки фото на сервер==========================
-  Future pickImage(ImageSource source) async {
-    // final read = context.read<MainScreenProvider>();
-    try {
-      final myImage = await imagePicer.pickImage(source: source);
-      if (myImage == null) {
-        return;
-      }
-      photo = await File(myImage.path);
-
-      //! final path = 'files/avatar$uid.jpg';
-      //! final ref = FirebaseStorage.instance.ref().child(path);
-      //! uploadTask = ref.putFile(photo!);
-
-      //! final snapshot = await uploadTask!.whenComplete(() {});
-      //! final urlDownload = await snapshot.ref.getDownloadURL();
-      //! currentAvatar = urlDownload;
+   Future<void> pickImage(ImageSource source) async {
+    photo = await _imageService.pickImage(source);
+    if (photo != null) {
       notifyListeners();
       print(photo);
-      //}
-    } on PlatformException catch (e) {
-      print('проблемы с $e');
     }
+  }
+
+  Future<void> showImageSource(BuildContext context) async {
+    await _imageService.showImageSource(context, (ImageSource source) {
+      pickImage(source);
+    });
   }
 
 //==============================================================================

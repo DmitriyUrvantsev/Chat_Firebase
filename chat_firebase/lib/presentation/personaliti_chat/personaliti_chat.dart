@@ -317,7 +317,7 @@ class _ChatScreenState extends State<ChatScreen> {
               // Implement search functionality here
             },
             onSubmitted: (val) {
-              _sendMessage();
+              chatProvider.sendImageMessage(_messageController.text);
               chatProvider.photo =
                   null; // Закрытие диалога и очистка выбранного изображения
             },
@@ -346,7 +346,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   chatProvider.photo?.path, // Сохранение пути к изображению
             );
 
-            chatProvider.sendMessage(message);
+           chatProvider.sendImageMessage(_messageController.text);
             _messageController.clear();
             chatProvider.photo =
                 null; // Отправка сообщения и очистка выбранного изображения

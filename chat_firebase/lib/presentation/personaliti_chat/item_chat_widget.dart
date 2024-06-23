@@ -24,31 +24,51 @@ class ItemChatWidget extends StatelessWidget {
           // Добавляем отступы для ListTile
           padding: EdgeInsets.symmetric(horizontal: 6.h),
           child: ListTile(
-            contentPadding:
-                EdgeInsets.zero, // Убираем внутренние отступы ListTile
+            contentPadding: EdgeInsets.zero, // Убираем внутренние отступы ListTile
             title: Align(
               alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 282.h),
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: isMe ? appTheme.green : Colors.grey,
                     borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(23),
-                        topLeft: Radius.circular(23),
-                        topRight: Radius.circular(23)),
+                      bottomLeft: Radius.circular(23),
+                      topLeft: Radius.circular(23),
+                      topRight: Radius.circular(23),
+                    ),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Выровнять содержимое по левому краю
                     children: [
-                      if(message.imageUrl != null)
-                      CustomImageView(
-                fit: BoxFit.fitHeight,
-                imagePath: message.imageUrl,
-              ),
-                      Text(
-                        message.text,
-                        style: TextStyle(color: appTheme.gray800),
+                      if (message.imageUrl != null)
+                        Container(
+                          //height: 76.adaptSize,
+                          width: 282.h,
+                          clipBehavior: Clip.hardEdge,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                          child: Image.network(
+                            message.imageUrl ?? '',
+                            width: 282,
+                            // height: 76,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          textAlign: TextAlign.left, // Выровнять текст по левому краю
+                          message.text,
+                          style: TextStyle(color: appTheme.gray800, fontSize: 16),
+                        ),
                       ),
                     ],
                   ),
@@ -62,11 +82,17 @@ class ItemChatWidget extends StatelessWidget {
   }
 
   Widget _buildDateWidget(DateTime dateTime) {
+    final now = DateTime.now();
+    final isNow = dateTime.year == now.year &&
+        dateTime.month == now.month &&
+        dateTime.day == now.day &&
+        dateTime.hour == now.hour &&
+        dateTime.minute == now.minute;
+
     var color = const Color.fromRGBO(140, 168, 191, 1);
     return Container(
       width: double.maxFinite,
-      margin: EdgeInsets.symmetric(
-          horizontal: 6.h), // Устанавливаем отступы от краев экрана
+      margin: EdgeInsets.symmetric(horizontal: 6.h), // Устанавливаем отступы от краев экрана
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -75,25 +101,19 @@ class ItemChatWidget extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: 6.v),
-              child: Divider(
-                color: color,
-              ),
+              child: Divider(color: color),
             ),
           ),
           SizedBox(width: 10.h),
           Text(
-            DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
-            style: TextStyle(
-              color: color,
-            ),
+            isNow ? 'Сейчас' : DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
+            style: TextStyle(color: color),
           ),
           SizedBox(width: 10.h),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: 6.v),
-              child: Divider(
-                color: color,
-              ),
+              child: Divider(color: color),
             ),
           ),
         ],

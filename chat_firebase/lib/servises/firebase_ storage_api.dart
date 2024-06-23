@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:chat_firebase/data/models/user_avatar_file/user_avatar_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseApi {
   // static Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
@@ -59,6 +60,31 @@ class FirebaseApi {
       return '';
     }
   }
+
+
+ 
+
+  Future<String> uploadChatImage(String uid, File? photo) async {
+    if (photo == null) {
+      print('Не выбрано изображение');
+      return '';
+    }
+
+    try {
+      final ref = _storage.ref().child('chat_images/$uid/${const Uuid().v4()}.jpg');
+      await ref.putFile(photo);
+
+      final url = await ref.getDownloadURL();
+      print('Ссылка на загруженное изображение: $url');
+      print('Изображение успешно загружено и ссылка сохранена в Firestore');
+
+      return url;
+    } catch (e) {
+      print('Ошибка при загрузке изображения: $e');
+      return '';
+    }
+  }
+
 
 
 

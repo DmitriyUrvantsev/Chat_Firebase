@@ -25,9 +25,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _messageController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -45,50 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    _messageController.dispose();
-    _scrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _sendMessage() async {
-    if (_messageController.text.isEmpty) {
-      return;
-    }
-
-    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    final currentUserId = AuthService().currentUser?.uid ?? 'нулл';
-
-    final currentTimestamp = Timestamp.now();
-
-    Timestamp? timeChangeDate;
-    timeChangeDate = currentTimestamp;
-
-    ChatMessage message = ChatMessage(
-      senderId: currentUserId,
-      text: _messageController.text,
-      timestamp: currentTimestamp,
-      timeChangeDate: timeChangeDate,
-    );
-
-    await chatProvider.sendMessage(message);
-    _messageController.clear();
-  }
-
-  bool shouldShowTimeChange(
-      ChatMessage currentMessage, ChatMessage? previousMessage) {
-    if (previousMessage == null) {
-      return currentMessage.timeChangeDate != null;
-    }
-    return !isSameMinute(currentMessage.timestamp, previousMessage.timestamp);
-  }
-
-  bool isSameMinute(Timestamp timestamp1, Timestamp timestamp2) {
-    return DateTime.fromMillisecondsSinceEpoch(
-                timestamp1.millisecondsSinceEpoch)
-            .difference(DateTime.fromMillisecondsSinceEpoch(
-                timestamp2.millisecondsSinceEpoch))
-            .inMinutes ==
-        0;
   }
 
   @override
@@ -123,7 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                         return ListView.builder(
                           reverse: true,
-                          controller: _scrollController,
+                          controller: chatProvider.scrollController,
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             var message = messages[index];
@@ -198,9 +152,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-          SizedBox(width: 12.0),
+          const SizedBox(width: 12.0),
           Padding(
-            padding: EdgeInsets.only(top: 2.0, bottom: 9.0),
+            padding: const  EdgeInsets.only(top: 2.0, bottom: 9.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -226,6 +180,8 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+
+///---------
   Widget _buildSectionTextField(BuildContext context) {
     final read = context.read<ChatProvider>();
 
@@ -235,6 +191,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           CustomIconButton(
               onTap: () {
+               
                 read.focusNode.unfocus();
                 read.showImageSource(context);
               },
@@ -249,11 +206,11 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: CustomFloatingTextField(
               focusNode: read.focusNode,
-              controller: _messageController,
+              controller: read.messageController,
               autofocus: false,
               labelStyle: CustomTextStyles.bodyLargeGray80020,
               labelText: 'Сообщение',
-              onSubmitted: (val) => _sendMessage(),
+              onSubmitted: (val) => read.sendTextMessage(),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               borderDecoration: OutlineInputBorder(
@@ -265,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           SizedBox(width: 8.h),
           CustomIconButton(
-              onTap: _sendMessage,
+              onTap:() => read.sendTextMessage(),
               height: 42.adaptSize,
               width: 42.adaptSize,
               padding: EdgeInsets.all(10.h),
@@ -279,14 +236,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildSectionTextFieldImage(BuildContext context) {
-    final chatProvider = context.read<ChatProvider>();
+    final read = context.read<ChatProvider>();
 
     return Row(
       children: <Widget>[
         CustomIconButton(
           onTap: () {
             Navigator.of(context).pop();
-            chatProvider.photo = null;
+            read.photo = null;
           },
           height: 42.adaptSize,
           width: 42.adaptSize,
@@ -296,13 +253,13 @@ class _ChatScreenState extends State<ChatScreen> {
         SizedBox(width: 8.h),
         Expanded(
           child: CustomFloatingTextField(
-            controller: _messageController,
+            controller: read.messageController,
             autofocus: false,
             labelStyle: CustomTextStyles.bodyLargeGray80020,
             labelText: 'Сообщение',
             onSubmitted: (val) {
-              chatProvider.sendImageMessage(_messageController.text);
-              chatProvider.photo = null;
+              read.sendImageMessage(read.messageController.text);
+              read.photo = null;
             },
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -322,16 +279,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
             ChatMessage message = ChatMessage(
               senderId: currentUserId,
-              text: _messageController.text,
+              text: read.messageController.text,
               timestamp: currentTimestamp,
               timeChangeDate: timeChangeDate,
               imageUrl:
-                  chatProvider.photo?.path, // Сохранение пути к изображению
+                  read.photo?.path, // Сохранение пути к изображению
             );
 
-            chatProvider.sendImageMessage(_messageController.text);
-            _messageController.clear();
-            chatProvider.photo =
+            read.sendImageMessage(read.messageController.text);
+            read.messageController.clear();
+            read.photo =
                 null; // Отправка сообщения и очистка выбранного изображения
           },
           height: 42.adaptSize,

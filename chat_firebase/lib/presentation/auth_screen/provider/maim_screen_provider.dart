@@ -21,6 +21,8 @@ class MainScreenProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   TextEditingController yourNameController = TextEditingController();
   TextEditingController yourSurNameController = TextEditingController();
+  FocusNode focusNode = FocusNode();
+   FocusNode focusNode2 = FocusNode();
   String? uid;
 
 //---------------------------------------------------------------------------
@@ -115,7 +117,6 @@ class MainScreenProvider extends ChangeNotifier {
     AuthService().signOut();
   }
 
-
 //!=========Avatar Model========================================================
 //!=========Avatar Model========================================================
 //!=========Avatar Model========================================================
@@ -124,9 +125,9 @@ class MainScreenProvider extends ChangeNotifier {
   File? photo;
   UploadTask? uploadTask;
   final ImageService _imageService = ImageService();
- 
+
 //=====================функция загрузки фото на сервер==========================
-   Future<void> pickImage(ImageSource source) async {
+  Future<void> pickImage(ImageSource source) async {
     photo = await _imageService.pickImage(source);
     if (photo != null) {
       notifyListeners();
@@ -135,6 +136,7 @@ class MainScreenProvider extends ChangeNotifier {
   }
 
   Future<void> showImageSource(BuildContext context) async {
+    focusNode.unfocus();
     await _imageService.showImageSource(context, (ImageSource source) {
       pickImage(source);
     });
@@ -151,18 +153,19 @@ class MainScreenProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
   //==============================================================================
-Color getColorForLetter(String letter) {
-  // Используем хэш-функцию для генерации цвета
-  final int hash = letter.codeUnitAt(0);
-  final Random random = Random(hash);
-  return Color.fromARGB(
-    255,
-    random.nextInt(256),
-    random.nextInt(256),
-    random.nextInt(256),
-  );
-}
+  Color getColorForLetter(String letter) {
+    // Используем хэш-функцию для генерации цвета
+    final int hash = letter.codeUnitAt(0);
+    final Random random = Random(hash);
+    return Color.fromARGB(
+      255,
+      random.nextInt(256),
+      random.nextInt(256),
+      random.nextInt(256),
+    );
+  }
 
   @override
   void dispose() {

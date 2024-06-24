@@ -39,15 +39,7 @@ class DatabaseService extends ChangeNotifier {
      currentAvatar: snapshot.get('currentAvatar'),
     );
   }
-
-
-
-
-
-
-
-
-  // ---------получение всех пользователей stream ---------
+// ---------получение всех пользователей stream ---------
   Stream<List<UserAppData>> get allUsers {
     return userCollection.snapshots().map((snapshot) => _userListFromSnapshot(snapshot));
   }

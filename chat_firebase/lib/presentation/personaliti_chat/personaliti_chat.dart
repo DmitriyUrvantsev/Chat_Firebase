@@ -34,7 +34,11 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     final currentUserId = AuthService().currentUser?.uid ?? 'нулл';
     chatProvider.createChat(currentUserId, widget.user.uid);
-
+    chatProvider.getMessages().listen((_) {
+      setState(() {
+        chatProvider.setLoading(false);
+      });
+    });
     print(currentUserId);
     print(widget.user.uid);
   }
@@ -96,52 +100,51 @@ class _ChatScreenState extends State<ChatScreen> {
           .getMessages(); //!КОСТЫЛЬ(без этого задержка до минуты(чтото перегружает поток))
     });
 
-    return PopScope(
-      canPop: true,
-      child: Scaffold(
-        appBar: _sectionCustomAppBar(context),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                child: StreamBuilder<List<ChatMessage>>(
-                  stream: chatProvider.getMessages(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    var messagesOrign = snapshot.data ?? [];
-                    var messages = messagesOrign.reversed.toList();
-
-                    WidgetsBinding.instance.addPostFrameCallback((_) {});
-
-                    return ListView.builder(
-                      reverse: true,
-                      controller: _scrollController,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        var message = messages[index];
-                        ChatMessage? previousMessage;
-                        if (index < messages.length - 1) {
-                          previousMessage = messages[index + 1];
+    return Scaffold(
+      appBar: _sectionCustomAppBar(context),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Expanded(
+              child: chatProvider.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : StreamBuilder<List<ChatMessage>>(
+                      stream: chatProvider.getMessages(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
-                        bool isMe =
-                            message.senderId == AuthService().currentUser?.uid;
-
-                        return ItemChatWidget(isMe: isMe, message: message);
+    
+                        var messagesOrign = snapshot.data ?? [];
+                        var messages = messagesOrign.reversed.toList();
+    
+                        return ListView.builder(
+                          reverse: true,
+                          controller: _scrollController,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            var message = messages[index];
+                            ChatMessage? previousMessage;
+                            if (index < messages.length - 1) {
+                              previousMessage = messages[index + 1];
+                            }
+                            bool isMe = message.senderId ==
+                                AuthService().currentUser?.uid;
+    
+                            return ItemChatWidget(
+                                isMe: isMe, message: message);
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
-              ),
-              if (chatProvider.photo != null)
-                _buildImageDialog(context, chatProvider),
-              if (chatProvider.photo == null) _buildSectionTextField(context),
-            ],
-          ),
+                    ),
+            ),
+            if (chatProvider.photo != null)
+              _buildImageDialog(context, chatProvider),
+            if (chatProvider.photo == null) _buildSectionTextField(context),
+          ],
         ),
       ),
     );
@@ -226,13 +229,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildSectionTextField(BuildContext context) {
     final read = context.read<ChatProvider>();
-    Timer? _debounce;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 20.v),
       child: Row(
         children: <Widget>[
           CustomIconButton(
-              onTap: () => read.showImageSource(context),
+              onTap: () {
+               
+                read.focusNode.unfocus();
+                read.showImageSource(context);
+              },
               height: 42.adaptSize,
               width: 42.adaptSize,
               padding: EdgeInsets.all(10.h),
@@ -243,6 +250,7 @@ class _ChatScreenState extends State<ChatScreen> {
           SizedBox(width: 8.h),
           Expanded(
             child: CustomFloatingTextField(
+              focusNode: read.focusNode,
               controller: _messageController,
               autofocus: false,
               labelStyle: CustomTextStyles.bodyLargeGray80020,
@@ -366,10 +374,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.lightBlue.shade100,
-                            width: 2,
-                          ),
+                          // border: Border.all(
+                          //   color: Colors.lightBlue.shade100,
+                          //   width: 2,
+                          // ),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),

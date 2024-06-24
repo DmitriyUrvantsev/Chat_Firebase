@@ -42,6 +42,8 @@ class K3AccounrScreenWidget extends StatelessWidget {
 
                 SizedBox(height: 17.v),
                 CustomFloatingTextField(
+                    autofocus: false,
+                    focusNode: read.focusNode,
                     controller: read.yourNameController,
                     labelText: "Имя",
                     validator: (val) =>
@@ -50,6 +52,8 @@ class K3AccounrScreenWidget extends StatelessWidget {
                     hintText: "Иван"),
                 SizedBox(height: 17.v),
                 CustomFloatingTextField(
+                    autofocus: false,
+                    focusNode: read.focusNode2,
                     controller: read.yourSurNameController,
                     labelText: "Фамилия",
                     validator: (val) =>
@@ -57,8 +61,9 @@ class K3AccounrScreenWidget extends StatelessWidget {
                     labelStyle: CustomTextStyles.bodyLargeGray600,
                     hintText: "Иванов"),
 
-                SizedBox(height: 40.v),
+                SizedBox(height: 30.v),
                 CustomElevatedButton(
+                  height: 80.v,
                   //isDisabled: false,
                   // decoration: BoxDecoration(color: Colors.amber),
                   onPressed: () {
@@ -98,7 +103,7 @@ class K3AccounrScreenWidget extends StatelessWidget {
                 text: 'Аккаунт',
                 margin: EdgeInsets.only(left: 26.h))
           ])),
-      // styleType: Style.bgShadow,
+
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(4.0),
         child: Container(

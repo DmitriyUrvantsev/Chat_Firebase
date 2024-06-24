@@ -34,11 +34,18 @@ class ItemChatWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: isMe ? appTheme.green : Colors.grey,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(23),
-                      topLeft: Radius.circular(23),
-                      topRight: Radius.circular(23),
-                    ),
+                    borderRadius: isMe
+                        ? const BorderRadius.only(
+                            bottomLeft: Radius.circular(23),
+                            topLeft: Radius.circular(23),
+                            topRight: Radius.circular(23),
+                          )
+                        : const BorderRadius.only(
+                            // bottomLeft: Radius.circular(10),
+                            topLeft: Radius.circular(23),
+                            topRight: Radius.circular(23),
+                            bottomRight: Radius.circular(23),
+                          ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment
@@ -49,13 +56,21 @@ class ItemChatWidget extends StatelessWidget {
                           //height: 76.adaptSize,
                           width: 282.h,
                           clipBehavior: Clip.hardEdge,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomRight: Radius.circular(10),
-                            ),
+                          decoration: BoxDecoration(
+                          
+                            borderRadius: isMe
+                                ? const BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomRight: Radius.circular(10),
+                                  )
+                                : const BorderRadius.only(
+                                    bottomLeft: Radius.circular(10),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                  ),
                           ),
                           child: Image.network(
                             message.imageUrl ?? '',

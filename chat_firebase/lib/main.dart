@@ -11,6 +11,7 @@ import 'servises/data_base.dart';
 
 ///
 
+//
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -95,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
 
-    Timer(const Duration(milliseconds: 500), () {
+    Timer(const Duration(milliseconds: 3000), () {
       chatProvider
           .getMessages(); //!КОСТЫЛЬ(без этого задержка до минуты(чтото перегружает поток))
     });
@@ -117,10 +117,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
-    
+
                         var messagesOrign = snapshot.data ?? [];
                         var messages = messagesOrign.reversed.toList();
-    
+
                         return ListView.builder(
                           reverse: true,
                           controller: _scrollController,
@@ -133,9 +133,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             }
                             bool isMe = message.senderId ==
                                 AuthService().currentUser?.uid;
-    
-                            return ItemChatWidget(
-                                isMe: isMe, message: message);
+
+                            return ItemChatWidget(isMe: isMe, message: message);
                           },
                         );
                       },
@@ -236,7 +235,6 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           CustomIconButton(
               onTap: () {
-               
                 read.focusNode.unfocus();
                 read.showImageSource(context);
               },

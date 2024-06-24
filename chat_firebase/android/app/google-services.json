@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "259149994361",
-    "project_id": "chat-firebase-5f5f3",
-    "storage_bucket": "chat-firebase-5f5f3.appspot.com"
+    "project_number": "75093446515",
+    "project_id": "chat-firebase-2-a5e0e",
+    "storage_bucket": "chat-firebase-2-a5e0e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:259149994361:android:a3e4e83ebafcd2bbe8f7a8",
+        "mobilesdk_app_id": "1:75093446515:android:d50f98fb31ca6ba655ff06",
         "android_client_info": {
           "package_name": "com.dmitrijurban.chat_firebase"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDEXuk2LnqFNdZctUoxFbzHRbdApnR5Lxo"
+          "current_key": "AIzaSyB4TcOuE0JNj13rkaaQyocKZD6IcmODivY"
         }
       ],
       "services": {

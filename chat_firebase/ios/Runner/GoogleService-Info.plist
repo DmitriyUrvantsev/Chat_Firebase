@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBw5j-BPEBcL1VYfbesJDcfcUk3ATdLL8w</string>
+	<string>AIzaSyAXAS4u4f04kINDFkl-ZmFaf5_41BD3aGs</string>
 	<key>GCM_SENDER_ID</key>
-	<string>259149994361</string>
+	<string>75093446515</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.dmitrijurban.chatFirebase</string>
 	<key>PROJECT_ID</key>
-	<string>chat-firebase-5f5f3</string>
+	<string>chat-firebase-2-a5e0e</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chat-firebase-5f5f3.appspot.com</string>
+	<string>chat-firebase-2-a5e0e.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:259149994361:ios:81eb1c9e42ca9d53e8f7a8</string>
+	<string>1:75093446515:ios:d1e8d1154bf0f7b555ff06</string>
 </dict>
 </plist>

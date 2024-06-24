@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDEXuk2LnqFNdZctUoxFbzHRbdApnR5Lxo',
-    appId: '1:259149994361:android:a3e4e83ebafcd2bbe8f7a8',
-    messagingSenderId: '259149994361',
-    projectId: 'chat-firebase-5f5f3',
-    storageBucket: 'chat-firebase-5f5f3.appspot.com',
+    apiKey: 'AIzaSyB4TcOuE0JNj13rkaaQyocKZD6IcmODivY',
+    appId: '1:75093446515:android:d50f98fb31ca6ba655ff06',
+    messagingSenderId: '75093446515',
+    projectId: 'chat-firebase-2-a5e0e',
+    storageBucket: 'chat-firebase-2-a5e0e.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBw5j-BPEBcL1VYfbesJDcfcUk3ATdLL8w',
-    appId: '1:259149994361:ios:81eb1c9e42ca9d53e8f7a8',
-    messagingSenderId: '259149994361',
-    projectId: 'chat-firebase-5f5f3',
-    storageBucket: 'chat-firebase-5f5f3.appspot.com',
+    apiKey: 'AIzaSyAXAS4u4f04kINDFkl-ZmFaf5_41BD3aGs',
+    appId: '1:75093446515:ios:d1e8d1154bf0f7b555ff06',
+    messagingSenderId: '75093446515',
+    projectId: 'chat-firebase-2-a5e0e',
+    storageBucket: 'chat-firebase-2-a5e0e.appspot.com',
     iosBundleId: 'com.dmitrijurban.chatFirebase',
   );
 

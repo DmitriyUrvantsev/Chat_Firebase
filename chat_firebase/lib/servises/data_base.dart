@@ -19,15 +19,16 @@ class DatabaseService extends ChangeNotifier {
     return await userCollection.doc(uid).set(data);
   }
 
-  //! ---------userFromFireBase list from snapshot ---------
-  //! List<UserFromFirebase> _taskListFromSnapshot(QuerySnapshot snapshot) {
-  //!   return snapshot.docs.map((doc) {
-  //!     return UserFromFirebase(
-  //!       name: doc.get('name') ?? '0',
-  //!       surName: doc.get('surName') ?? '0',
-  //!     );
-  //!   }).toList();
-  //! }
+
+
+
+  // --------- получение user doc stream ---------//!============
+  Stream<UserAppData> get userData {
+    return userCollection
+        .doc(uid)
+        .snapshots()
+        .map((e) => _userDataFromSnapshot(e));
+  }
 
 // ---------user data from snapshots ---------
   UserAppData _userDataFromSnapshot(DocumentSnapshot snapshot) {
@@ -39,24 +40,19 @@ class DatabaseService extends ChangeNotifier {
     );
   }
 
-  //! ---------получение tasks stream ---------//!=============
-  //! Stream<List<UserFromFirebase>> get tasks {
-  //!   return taskCollection.snapshots().map(_taskListFromSnapshot);
-  //! }
 
-  // --------- получение user doc stream ---------//!============
-  Stream<UserAppData> get userData {
-    return userCollection
-        .doc(uid)
-        .snapshots()
-        .map((e) => _userDataFromSnapshot(e));
-  }
+
+
+
+
+
 
   // ---------получение всех пользователей stream ---------
   Stream<List<UserAppData>> get allUsers {
     return userCollection.snapshots().map((snapshot) => _userListFromSnapshot(snapshot));
   }
-
+//
+//
   List<UserAppData> _userListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => UserAppData(

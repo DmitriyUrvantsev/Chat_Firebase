@@ -38,6 +38,8 @@ class ChatService {
     });
   }
 
+
+
   // Метод для получения потока сообщений
   Stream<List<ChatMessage>> getMessages(String chatId) {
     return _db

@@ -1,8 +1,8 @@
+import 'dart:async';
+
 import 'package:chat_firebase/widgets/app_bar/appbar_subtitle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart'; // Добавлено для использования Provider
 import '../../../data/models/chat/chat_model.dart';
 import '../../core/app_export.dart';
 import '../../data/models/user/user_app.dart';
@@ -11,7 +11,6 @@ import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/castom_icon_button.dart';
-import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import 'item_chat_widget.dart';
 import 'provider/chat_provider.dart';
@@ -42,6 +41,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
+    _messageController
+        .dispose(); 
     _scrollController.dispose();
     super.dispose();
   }
@@ -56,12 +57,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     final currentTimestamp = Timestamp.now();
 
-    // Определение timeChangeDate
     Timestamp? timeChangeDate;
-    //! if (chatProvider.lastTimeChangeDate == null || !isSameMinute(currentTimestamp, chatProvider.lastTimeChangeDate!)) {
     timeChangeDate = currentTimestamp;
-    //! chatProvider.lastTimeChangeDate = currentTimestamp;
-    //! }
 
     ChatMessage message = ChatMessage(
       senderId: currentUserId,
@@ -73,17 +70,10 @@ class _ChatScreenState extends State<ChatScreen> {
     await chatProvider.sendMessage(message);
     _messageController.clear();
 
-    // Прокрутка к последнему добавленному сообщению
-    _scrollToBottom();
+   
   }
 
-  void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(
-        _scrollController.position.minScrollExtent,
-      );
-    }
-  }
+
 
   bool shouldShowTimeChange(
       ChatMessage currentMessage, ChatMessage? previousMessage) {
@@ -115,7 +105,6 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              //if (chatProvider.photo == null)
               Expanded(
                 child: StreamBuilder<List<ChatMessage>>(
                   stream: chatProvider.getMessages(),
@@ -127,9 +116,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     var messagesOrign = snapshot.data ?? [];
                     var messages = messagesOrign.reversed.toList();
 
-                    // Прокрутка к последнему добавленному сообщению при первой загрузке
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _scrollToBottom();
+                    
                     });
 
                     return ListView.builder(
@@ -154,7 +142,6 @@ class _ChatScreenState extends State<ChatScreen> {
               if (chatProvider.photo != null)
                 _buildImageDialog(context, chatProvider),
               if (chatProvider.photo == null) _buildSectionTextField(context),
-              //! Добавлено отображение диалогового окна для изображения
             ],
           ),
         ),
@@ -241,6 +228,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildSectionTextField(BuildContext context) {
     final read = context.read<ChatProvider>();
+    Timer? _debounce;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 20.v),
       child: Row(
@@ -261,9 +249,7 @@ class _ChatScreenState extends State<ChatScreen> {
               autofocus: false,
               labelStyle: CustomTextStyles.bodyLargeGray80020,
               labelText: 'Сообщение',
-              onChanged: (value) {
-                // Implement search functionality here
-              },
+            
               onSubmitted: (val) => _sendMessage(),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -298,13 +284,13 @@ class _ChatScreenState extends State<ChatScreen> {
           onTap: () {
             Navigator.of(context).pop();
             chatProvider.photo =
-                null; // Закрытие диалога и очистка выбранного изображения
+                null; 
           },
           height: 42.adaptSize,
           width: 42.adaptSize,
           padding: EdgeInsets.all(5.h),
           child: Icon(Icons.cancel,
-              color: Colors.grey), // Изменение цвета на серый
+              color: Colors.grey), 
         ),
         SizedBox(width: 8.h),
         Expanded(
@@ -313,13 +299,11 @@ class _ChatScreenState extends State<ChatScreen> {
             autofocus: false,
             labelStyle: CustomTextStyles.bodyLargeGray80020,
             labelText: 'Сообщение',
-            onChanged: (value) {
-              // Implement search functionality here
-            },
+         
             onSubmitted: (val) {
               chatProvider.sendImageMessage(_messageController.text);
               chatProvider.photo =
-                  null; // Закрытие диалога и очистка выбранного изображения
+                  null; 
             },
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -346,7 +330,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   chatProvider.photo?.path, // Сохранение пути к изображению
             );
 
-           chatProvider.sendImageMessage(_messageController.text);
+            chatProvider.sendImageMessage(_messageController.text);
             _messageController.clear();
             chatProvider.photo =
                 null; // Отправка сообщения и очистка выбранного изображения
@@ -355,7 +339,7 @@ class _ChatScreenState extends State<ChatScreen> {
           width: 42.adaptSize,
           padding: EdgeInsets.all(5.h),
           child: const Icon(Icons.send,
-              color: Colors.grey), // Изменение цвета на серый
+              color: Colors.grey), 
         ),
       ],
     );

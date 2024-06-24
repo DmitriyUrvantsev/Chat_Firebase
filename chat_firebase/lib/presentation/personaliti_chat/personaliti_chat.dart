@@ -41,8 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    _messageController
-        .dispose(); 
+    _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -69,11 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     await chatProvider.sendMessage(message);
     _messageController.clear();
-
-   
   }
-
-
 
   bool shouldShowTimeChange(
       ChatMessage currentMessage, ChatMessage? previousMessage) {
@@ -96,6 +91,11 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
 
+    Timer(const Duration(milliseconds: 500), () {
+      chatProvider
+          .getMessages(); //!КОСТЫЛЬ(без этого задержка до минуты(чтото перегружает поток))
+    });
+
     return PopScope(
       canPop: true,
       child: Scaffold(
@@ -116,9 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     var messagesOrign = snapshot.data ?? [];
                     var messages = messagesOrign.reversed.toList();
 
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                    
-                    });
+                    WidgetsBinding.instance.addPostFrameCallback((_) {});
 
                     return ListView.builder(
                       reverse: true,
@@ -249,7 +247,6 @@ class _ChatScreenState extends State<ChatScreen> {
               autofocus: false,
               labelStyle: CustomTextStyles.bodyLargeGray80020,
               labelText: 'Сообщение',
-            
               onSubmitted: (val) => _sendMessage(),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -283,14 +280,12 @@ class _ChatScreenState extends State<ChatScreen> {
         CustomIconButton(
           onTap: () {
             Navigator.of(context).pop();
-            chatProvider.photo =
-                null; 
+            chatProvider.photo = null;
           },
           height: 42.adaptSize,
           width: 42.adaptSize,
           padding: EdgeInsets.all(5.h),
-          child: Icon(Icons.cancel,
-              color: Colors.grey), 
+          child: Icon(Icons.cancel, color: Colors.grey),
         ),
         SizedBox(width: 8.h),
         Expanded(
@@ -299,11 +294,9 @@ class _ChatScreenState extends State<ChatScreen> {
             autofocus: false,
             labelStyle: CustomTextStyles.bodyLargeGray80020,
             labelText: 'Сообщение',
-         
             onSubmitted: (val) {
               chatProvider.sendImageMessage(_messageController.text);
-              chatProvider.photo =
-                  null; 
+              chatProvider.photo = null;
             },
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -338,8 +331,7 @@ class _ChatScreenState extends State<ChatScreen> {
           height: 42.adaptSize,
           width: 42.adaptSize,
           padding: EdgeInsets.all(5.h),
-          child: const Icon(Icons.send,
-              color: Colors.grey), 
+          child: const Icon(Icons.send, color: Colors.grey),
         ),
       ],
     );

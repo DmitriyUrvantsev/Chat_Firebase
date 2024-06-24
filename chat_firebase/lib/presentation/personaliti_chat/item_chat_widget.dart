@@ -24,7 +24,8 @@ class ItemChatWidget extends StatelessWidget {
           // Добавляем отступы для ListTile
           padding: EdgeInsets.symmetric(horizontal: 6.h),
           child: ListTile(
-            contentPadding: EdgeInsets.zero, // Убираем внутренние отступы ListTile
+            contentPadding:
+                EdgeInsets.zero, // Убираем внутренние отступы ListTile
             title: Align(
               alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
               child: ConstrainedBox(
@@ -40,7 +41,8 @@ class ItemChatWidget extends StatelessWidget {
                     ),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, // Выровнять содержимое по левому краю
+                    crossAxisAlignment: CrossAxisAlignment
+                        .start, // Выровнять содержимое по левому краю
                     children: [
                       if (message.imageUrl != null)
                         Container(
@@ -49,7 +51,7 @@ class ItemChatWidget extends StatelessWidget {
                           clipBehavior: Clip.hardEdge,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(20),
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20),
                               bottomRight: Radius.circular(10),
@@ -62,14 +64,17 @@ class ItemChatWidget extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          textAlign: TextAlign.left, // Выровнять текст по левому краю
-                          message.text,
-                          style: TextStyle(color: appTheme.gray800, fontSize: 16),
+                      if (message.text.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            textAlign: TextAlign
+                                .left, // Выровнять текст по левому краю
+                            message.text,
+                            style: TextStyle(
+                                color: appTheme.gray800, fontSize: 16),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -92,7 +97,8 @@ class ItemChatWidget extends StatelessWidget {
     var color = const Color.fromRGBO(140, 168, 191, 1);
     return Container(
       width: double.maxFinite,
-      margin: EdgeInsets.symmetric(horizontal: 6.h), // Устанавливаем отступы от краев экрана
+      margin: EdgeInsets.symmetric(
+          horizontal: 6.h), // Устанавливаем отступы от краев экрана
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -106,7 +112,9 @@ class ItemChatWidget extends StatelessWidget {
           ),
           SizedBox(width: 10.h),
           Text(
-            isNow ? 'Сейчас' : DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
+            isNow
+                ? 'Сейчас'
+                : DateFormat('dd MMMM yyyy, HH:mm').format(dateTime),
             style: TextStyle(color: color),
           ),
           SizedBox(width: 10.h),

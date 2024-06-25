@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:chat_firebase/core/app_export.dart';
 import 'package:chat_firebase/presentation/auth_screen/provider/maim_screen_provider.dart';
 import 'package:chat_firebase/presentation/auth_screen/account_screens/select_avatar_widget/select_avatar_widget.dart';
-import 'package:chat_firebase/widgets/app_bar/appbar_leading_image.dart';
-import 'package:chat_firebase/widgets/app_bar/appbar_subtitle.dart';
 import 'package:chat_firebase/widgets/app_bar/appbar_title.dart';
 import 'package:chat_firebase/widgets/app_bar/custom_app_bar.dart';
-
 import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_field.dart';
 
@@ -64,8 +61,7 @@ class K3AccounrScreenWidget extends StatelessWidget {
                 SizedBox(height: 30.v),
                 CustomElevatedButton(
                   height: 80.v,
-                  //isDisabled: false,
-                  // decoration: BoxDecoration(color: Colors.amber),
+             
                   onPressed: () {
                     read.saveAccuontData();
                   },
@@ -81,23 +77,13 @@ class K3AccounrScreenWidget extends StatelessWidget {
 
   /// ======================AppBar==============================================
   PreferredSizeWidget _sectionAppBar(BuildContext context) {
-    final read = context.read<MainScreenProvider>();
+    
     return CustomAppBar(
-      backgroundColor: PrimaryColors().white, //!=================
-      //height: 43.v,
-      // leadingWidth: 28.h,
-      // leading: AppbarLeadingImage(
-      //     onTap: () => read.backProjectScreen(),
-      //     color: PrimaryColors().lightBlueA700,
-      //     imagePath: ImageConstant.imgArrowRight,
-      //     margin: EdgeInsets.only(left: 8.h, top: 9.v, bottom: 12.v)),
+      backgroundColor: PrimaryColors().white,
+
       title: Padding(
           padding: EdgeInsets.only(right: 30.h),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            // AppbarSubtitle(
-            //     onTap: () => read.backProjectScreen(),
-            //     text: 'Мой аккаунт',
-            //     margin: EdgeInsets.only(bottom: 1.v)),
             AppbarTitle(
                 onTap: () => (),
                 text: 'Аккаунт',

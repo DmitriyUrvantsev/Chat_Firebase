@@ -6,7 +6,7 @@ import 'package:chat_firebase/firebase_options.dart';
 import 'package:chat_firebase/presentation/auth_screen/provider/maim_screen_provider.dart';
 import 'package:chat_firebase/servises/auth_servises.dart';
 import 'core/app_export.dart';
-import 'presentation/personaliti_chat/provider/chat_provider.dart';
+import 'presentation/chat_list/screens/provider/chat_provider.dart';
 import 'servises/data_base.dart';
 
 ///

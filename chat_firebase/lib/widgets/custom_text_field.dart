@@ -8,7 +8,7 @@ import '../core/app_export.dart';
 // ignore: must_be_immutable
 class CustomFloatingTextField extends StatelessWidget {
   CustomFloatingTextField(
-      {Key? key,
+      {super.key,
       this.alignment,
       this.width,
       this.scrollPadding,
@@ -40,10 +40,7 @@ class CustomFloatingTextField extends StatelessWidget {
       this.onChanged,
       this.errorText,
       this.height,
-      this.onSubmitted})
-      : super(
-          key: key,
-        );
+      this.onSubmitted});
   final double? height;
   final Alignment? alignment;
   final double? width;
@@ -78,7 +75,7 @@ class CustomFloatingTextField extends StatelessWidget {
 
   final FormFieldValidator<String>? validator;
 
-  var maskFormatter = new MaskTextInputFormatter(
+  var maskFormatter =  MaskTextInputFormatter(
       mask: '+# (###) ###-##-##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
@@ -143,7 +140,7 @@ class CustomFloatingTextField extends StatelessWidget {
         focusedBorder: borderDecoration ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.h),
-              borderSide: BorderSide(color: Colors.black),
+              borderSide: const BorderSide(color: Colors.black),
             ),
       );
 }

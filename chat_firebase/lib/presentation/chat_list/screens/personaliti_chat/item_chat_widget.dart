@@ -2,9 +2,9 @@ import 'package:chat_firebase/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../core/app_export.dart';
-import '../../data/models/chat/chat_model.dart';
-import '../../servises/auth_servises.dart';
+import '../../../../core/app_export.dart';
+import '../../../../data/models/chat/chat_model.dart';
+import '../../../../servises/auth_servises.dart';
 
 class ItemChatWidget extends StatelessWidget {
   final ChatMessage message;

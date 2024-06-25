@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../core/app_export.dart';
 import '../../../data/models/user/user_app.dart';
 import '../../../servises/auth_servises.dart';
@@ -9,7 +8,7 @@ import '../../auth_screen/provider/maim_screen_provider.dart';
 import 'user_item.dart';
 
 class ChatScreenWidget extends StatelessWidget {
-  const ChatScreenWidget({Key? key}) : super(key: key);
+  const ChatScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

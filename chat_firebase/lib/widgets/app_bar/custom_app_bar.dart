@@ -19,15 +19,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   final double? height;
-
   final Style? styleType;
-
   final double? leadingWidth;
-
   final Widget? leading;
-
   final Widget? title;
-
   final bool? centerTitle;
   final Color? backgroundColor;
   final List<Widget>? actions;
@@ -41,7 +36,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: height ?? 42.v,
       automaticallyImplyLeading: false,
       backgroundColor: backgroundColor,
-      //flexibleSpace: _getStyle(),
       leadingWidth: leadingWidth ?? 0,
       leading: leading,
       title: title,
@@ -56,31 +50,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         SizeUtils.width,
         height ?? 42.v,
       );
-  // _getStyle() {
-  //   switch (styleType) {
-  //     case Style.bgShadow:
-  //       return Container(
-  //         height: 43.v,
-  //         width: double.maxFinite,
-  //         decoration: BoxDecoration(
-  //           color: appTheme.gray100,
-  //           boxShadow: [
-  //             BoxShadow(
-  //               color: appTheme.black9004c,
-  //               spreadRadius: 2.h,
-  //               blurRadius: 2.h,
-  //               offset: const Offset(
-  //                 0,
-  //                 1,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     default:
-  //       return null;
-  //   }
-  // }
 }
 
 enum Style {

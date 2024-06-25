@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../core/app_export.dart';
-import '../../../data/models/chat/chat_model.dart';
-import '../../../servises/auth_servises.dart';
-import '../../../servises/data_base_messages.dart';
-import '../../../servises/image_service.dart';
+import '../../../../core/app_export.dart';
+import '../../../../data/models/chat/chat_model.dart';
+import '../../../../servises/auth_servises.dart';
+import '../../../../servises/data_base_messages.dart';
+import '../../../../servises/image_service.dart';
 
 class ChatProvider extends ChangeNotifier {
   FocusNode focusNode = FocusNode();

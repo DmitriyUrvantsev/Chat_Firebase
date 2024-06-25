@@ -38,7 +38,7 @@ class ImageService {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text(
+            child: const Text(
               'Закрыть',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -49,7 +49,7 @@ class ImageService {
                 onImagePicked(ImageSource.camera);
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 'Камера',
                 style: TextStyle(),
               ),
@@ -59,7 +59,7 @@ class ImageService {
                 onImagePicked(ImageSource.gallery);
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 'Галерея Фото',
                 style: TextStyle(),
               ),
@@ -74,8 +74,8 @@ class ImageService {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.camera_alt_outlined, color: Colors.blue),
-              title: Text(
+              leading: const Icon(Icons.camera_alt_outlined, color: Colors.blue),
+              title: const Text(
                 'Камерa',
                 style: TextStyle(color: Colors.blue),
               ),
@@ -85,8 +85,8 @@ class ImageService {
               },
             ),
             ListTile(
-              leading: Icon(Icons.image, color: Colors.blue),
-              title: Text(
+              leading: const Icon(Icons.image, color: Colors.blue),
+              title: const Text(
                 'Галерея',
                 style: TextStyle(color: Colors.blue),
               ),

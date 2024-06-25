@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../data/models/user/user_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../servises/data_base_messages.dart';
-import '../../personaliti_chat/personaliti_chat.dart';
+import 'personaliti_chat/personaliti_chat.dart';
 import '../../../data/models/chat/chat_model.dart';
 import 'package:intl/intl.dart';
 

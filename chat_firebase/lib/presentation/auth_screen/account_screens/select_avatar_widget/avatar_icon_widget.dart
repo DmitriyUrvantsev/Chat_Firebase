@@ -15,7 +15,6 @@ class AvatarIconWidget extends StatefulWidget {
 class _AvatarIconWidgetState extends State<AvatarIconWidget> {
   late Future<List<FirebaseStorageFile>> futureFiles;
 
-
   @override
   Widget build(BuildContext context) {
     final read = context.read<MainScreenProvider>();
@@ -32,7 +31,6 @@ class _AvatarIconWidgetState extends State<AvatarIconWidget> {
             ),
             child: Image.file(
               watch.photo!,
-              //!currentAvatar!,
               width: 76,
               height: 76,
               fit: BoxFit.cover,

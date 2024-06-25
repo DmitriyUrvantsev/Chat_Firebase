@@ -1,30 +1,29 @@
 import 'dart:async';
 
 import 'package:chat_firebase/widgets/app_bar/appbar_subtitle.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../../data/models/chat/chat_model.dart';
-import '../../core/app_export.dart';
-import '../../data/models/user/user_app.dart';
-import '../../servises/auth_servises.dart';
-import '../../widgets/app_bar/appbar_leading_image.dart';
-import '../../widgets/app_bar/appbar_title.dart';
-import '../../widgets/app_bar/custom_app_bar.dart';
-import '../../widgets/castom_icon_button.dart';
-import '../../widgets/custom_text_field.dart';
+import '../../../../../data/models/chat/chat_model.dart';
+import '../../../../core/app_export.dart';
+import '../../../../data/models/user/user_app.dart';
+import '../../../../servises/auth_servises.dart';
+import '../../../../widgets/app_bar/appbar_leading_image.dart';
+import '../../../../widgets/app_bar/appbar_title.dart';
+import '../../../../widgets/app_bar/custom_app_bar.dart';
+import '../../../../widgets/castom_icon_button.dart';
+import '../../../../widgets/custom_text_field.dart';
 import 'item_chat_widget.dart';
-import 'provider/chat_provider.dart';
+import '../provider/chat_provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserAppData user;
 
-  const ChatScreen({required this.user, Key? key}) : super(key: key);
+  const ChatScreen({required this.user, super.key});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  ChatScreenState createState() => ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
@@ -36,8 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
         chatProvider.setLoading(false);
       });
     });
-    print(currentUserId);
-    print(widget.user.uid);
+
   }
 
   @override
@@ -114,7 +112,7 @@ class _ChatScreenState extends State<ChatScreen> {
         color: PrimaryColors().gray600,
         imagePath: ImageConstant.imgArrowRight,
         margin:
-            EdgeInsets.only(left: 8.0, top: 19.0, bottom: 20.0, right: 10.0),
+            const EdgeInsets.only(left: 8.0, top: 19.0, bottom: 20.0, right: 10.0),
       ),
       title: Row(
         children: [
@@ -171,9 +169,9 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Colors.white,
       centerTitle: false,
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(1.0),
+        preferredSize: const Size.fromHeight(1.0),
         child: Container(
-          color: Color(0xFFEDF2F6),
+          color: const Color(0xFFEDF2F6),
           height: 1.0,
         ),
       ),
@@ -248,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
           height: 42.adaptSize,
           width: 42.adaptSize,
           padding: EdgeInsets.all(5.h),
-          child: Icon(Icons.cancel, color: Colors.grey),
+          child: const Icon(Icons.cancel, color: Colors.grey),
         ),
         SizedBox(width: 8.h),
         Expanded(
@@ -273,18 +271,10 @@ class _ChatScreenState extends State<ChatScreen> {
         SizedBox(width: 8.h),
         CustomIconButton(
           onTap: () {
-            final currentUserId = AuthService().currentUser?.uid ?? 'нулл';
-            final currentTimestamp = Timestamp.now();
-            Timestamp? timeChangeDate = currentTimestamp;
+          
+          
 
-            ChatMessage message = ChatMessage(
-              senderId: currentUserId,
-              text: read.messageController.text,
-              timestamp: currentTimestamp,
-              timeChangeDate: timeChangeDate,
-              imageUrl:
-                  read.photo?.path, // Сохранение пути к изображению
-            );
+         
 
             read.sendImageMessage(read.messageController.text);
             read.messageController.clear();
@@ -302,7 +292,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildImageDialog(BuildContext context, ChatProvider chatProvider) {
     return Dialog(
-      insetPadding: EdgeInsets.all(5),
+      insetPadding: const EdgeInsets.all(5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),

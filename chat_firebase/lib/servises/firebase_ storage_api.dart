@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:chat_firebase/data/models/user_avatar_file/user_avatar_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class FirebaseApi {

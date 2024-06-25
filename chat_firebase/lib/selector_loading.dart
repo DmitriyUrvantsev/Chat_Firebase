@@ -33,7 +33,7 @@ class _SelectorLoadingState extends State<SelectorLoading> {
     //!пока задублированна проверка(можно по  isAuth проверять а можно по user?.uid)
     //в зависимости от того, получен ли ID или нет, попадаем либо на авторизацию
     //либо на главный экран
-    if (!isAuth) {
+    if (user?.uid == null) {
       return const K3AccounrScreenWidget();//uid: user?.uid??'');
     } else {
       return const ChatScreenWidget();

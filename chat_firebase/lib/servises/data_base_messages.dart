@@ -52,4 +52,18 @@ class ChatService {
             .map((doc) => ChatMessage.fromMap(doc.data()))
             .toList());
   }
+
+
+ // Метод для получения последнего сообщения как потока
+  Stream<ChatMessage?> getLastMessage(String chatId) {
+    final messagesCollection = _db.collection('chats').doc(chatId).collection('messages');
+    return messagesCollection.orderBy('timestamp', descending: true).limit(1).snapshots().map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return ChatMessage.fromMap(snapshot.docs.first.data());
+      } else {
+        return null;
+      }
+    });
+  }
+
 }

@@ -79,7 +79,7 @@ class UserItem extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Row(
+                     const Row(
                       children: [
                         Text(
                           'Вы:', // Placeholder text, replace with actual logic
@@ -91,6 +91,7 @@ class UserItem extends StatelessWidget {
                         ),
                         SizedBox(width: 4),
                         Text(
+                          
                           'Уже сделал?', // Placeholder text, replace with actual logic
                           style: TextStyle(
                             color: Color(0xFF5E7A90),
